@@ -23,12 +23,12 @@ const getState = ({ getStore, getActions, setStore }) => {
             // fetching data from the backend
             const resp = await fetch(url, options);
             const data = await resp.json();
-            const usuarios = data.respuestas;
-            setStore(prevStore => ({
-              ...prevStore,
-              usuarios: data.respuestas
-            }));
-  setStore({ usuarios });
+            const usuarios = data
+            
+          setStore({usuarios});
+
+          console.log("Usuarios en store:", getStore().usuarios);
+
             // don't forget to return something, that is how the async resolves
             return data;
           } catch (error) {
