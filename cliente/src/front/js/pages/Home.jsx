@@ -16,6 +16,8 @@ export const Home = () => {
         
     };
 
+    const usuarios = store.usuarios
+
     return (
         <div className="container">
             <div className="text-center mt-5">
@@ -26,7 +28,7 @@ export const Home = () => {
                 <div className="mt-3">
                     <h2>Usuarios:</h2>
                     <ul>
-                        {store.usuarios.map((usuario, index) => (
+                        {usuarios.map((usuario, index) => (
                             <li key={index}>{usuario.nombre}</li>
                         ))}
                     </ul>

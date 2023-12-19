@@ -2,7 +2,8 @@ import express from 'express'
 import { createPool } from 'mysql2/promise'
 import { config } from 'dotenv'
 import bodyParser from 'body-parser';
-const cors = require('cors')
+import cors from 'cors';
+
 config()
 
 
@@ -11,8 +12,20 @@ app.use(bodyParser.json());
 
 const whitelist = ["http://localhost:8080",
                     "http://127.0.0.1:8080"]
-//MDW CORS
-app.use(cors({origin: whitelist}));
+app.use(cors({
+  origin: function(origin, callback){
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (whitelist.includes(origin)) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+
+}));
 
 
 const pool = createPool({
