@@ -2,11 +2,17 @@ import express from 'express'
 import { createPool } from 'mysql2/promise'
 import { config } from 'dotenv'
 import bodyParser from 'body-parser';
+const cors = require('cors')
 config()
 
 
 const app = express();
 app.use(bodyParser.json());
+
+const whitelist = ["http://localhost:8080",
+                    "http://127.0.0.1:8080"]
+//MDW CORS
+app.use(cors({origin: whitelist}));
 
 
 const pool = createPool({
@@ -20,6 +26,7 @@ const pool = createPool({
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
+    
     res.status(500).send('Algo salió mal!');
   });
   
