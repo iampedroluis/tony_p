@@ -27,7 +27,7 @@ export const Home = () => {
                 </button>
                 <div className="mt-3">
                     <h2>Usuarios:</h2>
-        {store.usuarios.map((el, index)=> <li key={index}>{el.name}</li>)}
+        {store.usuarios.map((el, index)=> <li key={index}>{el.nombre}</li>)}
                 </div>
             </div>
         </div>
