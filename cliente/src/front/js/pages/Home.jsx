@@ -6,8 +6,8 @@ export const Home = () => {
 
     useEffect(() => {
         // Cargar usuarios al montar el componente
-        
-    }, []);
+        actions.getUsuarios()
+    }, [store.usuarios]);
 
     return (
         <div className="container">
