@@ -22,7 +22,7 @@ services:
       - 3000:3000
 
   app_front:
-    build: ./cliente
+    build: ./front
     depends_on:
       - mysqldb
       - app_back
