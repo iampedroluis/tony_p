@@ -1,4 +1,21 @@
-.texto{
-    color:red;
-    font-family: 'Times New Roman', Times, serif;
+body.dark {
+    /* Estilos específicos para el modo oscuro */
+    
+    background-color: #2b4162;
+    background-image: linear-gradient(315deg, #2b4162 0%, #12100e 74%);
+
+    color: #e6e6e6;
+  }
+
+label{
+    font-family: 'Raleway', sans-serif;
+}
+
+.form-control::placeholder{
+    font-family: 'Raleway', sans-serif;
+}
+.big-text{
+    font-family: 'Inter', sans-serif;
+    font-size: 65px;
+    font-weight: 700;
 }

@@ -1,7 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom"; // Asegúrate de tener react-router-dom instalado si lo estás utilizando para navegación
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    document.body.classList.toggle('dark', darkMode);
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
@@ -36,11 +43,19 @@ export const Navbar = () => {
                 Contacto
               </Link>
             </li>
+            <li className="nav-item">
+              {/* Cambiar entre íconos de sol y luna según el modo actual */}
+             <button className="bg-transparent border-0" onClick={toggleDarkMode}>
+                {darkMode ? (
+                  <i className="fas fa-moon text-gray-800"></i>
+                ) : (
+                  <i className="fas fa-sun text-yellow-500"></i>
+                )}
+              </button>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
   );
 };
-
-

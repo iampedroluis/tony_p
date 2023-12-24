@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Context } from "./store/appContext";
+// Pages 
 import { Home } from "./pages/Home";
+import {Registro } from "./pages/Registro.jsx"
+//Componentes
 import { Navbar } from "./component/Navbar";
+
+//Contexto
+import { Context } from "./store/appContext";
 import injectContext from "./store/appContext";
 
 
@@ -20,7 +25,7 @@ const Layout = () => {
           <Navbar></Navbar>
           <Routes>
             <Route element={<Home />} path="/" />
-        
+          <Route element={<Registro/>}  path="/registro"/>
             
           </Routes>
   
