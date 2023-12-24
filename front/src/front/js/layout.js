@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 // Pages 
 import { Home } from "./pages/Home";
 import {Registro } from "./pages/Registro.jsx"
+import { Posts } from "./pages/Posts.jsx";
 //Componentes
 import { Navbar } from "./component/Navbar";
 import { Footer } from "./component/Footer.jsx";
@@ -25,9 +26,9 @@ const Layout = () => {
       <BrowserRouter basename={basename}>
           <Navbar></Navbar>
           <Routes>
-            <Route element={<Home />} path="/" />
+          <Route element={<Home />} path="/" />
           <Route element={<Registro/>}  path="/registro"/>
-            
+          <Route element={<Posts/> } path="/posts"/>
           </Routes>
           <Footer></Footer>
           </BrowserRouter>
