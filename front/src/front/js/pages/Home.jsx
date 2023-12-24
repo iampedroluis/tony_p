@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
+import {Link, useNavigate, useLocation} from 'react-router-dom'
 import Postimg from "../../img/posts-img.png";
 
 export const Home = () => {
@@ -57,10 +58,12 @@ export const Home = () => {
     };
 
     return (
-        <div className="container mt-5 bg-gray-100 dark:bg-gray-900 shadow-md p-4 rounded">
+        <div className="container h-screen mt-5" >
             <div className="row">
                 <div className="col-12 mb-3 text-center">
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white big-text">NexConnect</h2>
+                <h2 className="text-3xl md:text-6xl font-bold text-center text-dark-black dark:text-principal-white big-text">
+                        NexConnect
+                    </h2>
                 </div>
                 <div className="col-md-6 mb-3">
                     <img src={Postimg} alt="Posts" className="w-100 h-auto" />

@@ -84,10 +84,12 @@ export const Registro = () => {
     };
 
     return (
-        <div className="container mt-5 bg-gray-100 dark:bg-gray-900 shadow-md p-4 rounded">
+        <div className="container h-screen mt-5 ">
             <div className="row">
                 <div className="col-12 mb-3 text-center">
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white big-text">Registrarse</h2>
+                <h2 className="text-3xl md:text-6xl font-bold text-center text-dark-black dark:text-principal-white big-text">
+                        Crear Cuenta
+                    </h2>
                 </div>
                 <div className="col-md-6 mb-3">
                     <img src={Postimg} alt="Posts" className="w-100 h-auto" />
@@ -97,7 +99,7 @@ export const Registro = () => {
                         <div className="mb-3">
                             <input
                                 type="text"
-                                className="form-control mb-2"
+                                className="form-control my-3"
                                 placeholder="Nombre"
                                 name="nombre"
                                 value={formData.nombre}
@@ -105,7 +107,7 @@ export const Registro = () => {
                             />
                             <input
                                 type="text"
-                                className="form-control mb-2"
+                                className="form-control my-3"
                                 placeholder="Apellido"
                                 name="apellido"
                                 value={formData.apellido}
@@ -113,7 +115,7 @@ export const Registro = () => {
                             />
                             <input
                                 type="email"
-                                className="form-control mb-2"
+                                className="form-control my-3"
                                 placeholder="tuemail@email.com"
                                 name="email"
                                 value={formData.email}
@@ -121,7 +123,7 @@ export const Registro = () => {
                             />
                             <input
                                 type="password"
-                                className="form-control mb-2"
+                                className="form-control my-3"
                                 placeholder="Tu Contraseña"
                                 name="password"
                                 value={formData.password}
@@ -129,21 +131,21 @@ export const Registro = () => {
                             />
                             <input
                                 type="password"
-                                className="form-control mb-2"
+                                className="form-control my-3"
                                 placeholder="Repetir Contraseña"
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
                             />
-                            <div className="mb-3">
-                                <h6 className="text-dark mt-1">Registrar como: </h6>
-                                <div className="d-flex justify-content-around">
-                                    <div className="form-check form-check-inline">
-                                        <label className="form-check-label text-dark me-2" htmlFor="maestro">
+                            <div className="my-3">
+                                <h6 className="text-dark text-cente ms-1">Registrar como: </h6>
+                                <div className="d-flex justify-content-around my-3">
+                                    <div className="form-check form-check-inline ">
+                                        <label className="form-check-label text-dark " htmlFor="maestro">
                                             Maestro
                                         </label>
                                         <input
-                                            className="form-check-input"
+                                            className="form-check-input mt-1"
                                             type="radio"
                                             name="role"
                                             id="maestro"
@@ -156,7 +158,7 @@ export const Registro = () => {
                                             Alumno
                                         </label>
                                         <input
-                                            className="form-check-input"
+                                            className="form-check-input mt-1"
                                             type="radio"
                                             name="role"
                                             id="alumno"
@@ -169,7 +171,7 @@ export const Registro = () => {
                                             Padre
                                         </label>
                                         <input
-                                            className="form-check-input"
+                                            className="form-check-input mt-1"
                                             type="radio"
                                             name="role"
                                             id="padre"
