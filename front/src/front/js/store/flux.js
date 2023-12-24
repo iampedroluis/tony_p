@@ -7,6 +7,13 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
   
       actions: {
+        createUser: async(jsonBody)=>{
+          console.log(jsonBody)
+        },
+        login: async(jsonBody) =>{
+          console.log(jsonBody)
+        },
+
         getUsuarios: async () => {
           console.log(process.env.REACT_APP_BACKEND_URL)
           const url = "http://localhost:3000/usuarios";
