@@ -6,6 +6,7 @@ import { Home } from "./pages/Home";
 import {Registro } from "./pages/Registro.jsx"
 //Componentes
 import { Navbar } from "./component/Navbar";
+import { Footer } from "./component/Footer.jsx";
 
 //Contexto
 import { Context } from "./store/appContext";
@@ -28,7 +29,7 @@ const Layout = () => {
           <Route element={<Registro/>}  path="/registro"/>
             
           </Routes>
-  
+          <Footer></Footer>
           </BrowserRouter>
     </div>
   );

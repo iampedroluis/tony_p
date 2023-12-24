@@ -13,7 +13,7 @@ export const Navbar = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-primary">
+        <nav className="navbar navbar-expand-lg navbar-light bg-primary ">
             <div className="container mx-5">
                 <Link className="navbar-brand" to="/">
                     <img src={nblanco} className="logo-nav" href="/"></img>
