@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import {Registro } from "./pages/Registro.jsx"
 import { Posts } from "./pages/Posts.jsx";
+import {CreatePost } from "./pages/CreatePost.jsx"
 //Componentes
 import { Navbar } from "./component/Navbar";
 import { Footer } from "./component/Footer.jsx";
@@ -29,6 +30,7 @@ const Layout = () => {
           <Route element={<Home />} path="/" />
           <Route element={<Registro/>}  path="/registro"/>
           <Route element={<Posts/> } path="/posts"/>
+          <Route element={<CreatePost/>} path="/posts/create"/>
           </Routes>
           <Footer></Footer>
           </BrowserRouter>

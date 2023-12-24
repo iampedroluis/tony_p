@@ -43,3 +43,7 @@ p.p-alerta{
     width: 20px;
     height: 20px;
 }
+
+.swal-small{
+    background-color: #ffffffef;
+}
