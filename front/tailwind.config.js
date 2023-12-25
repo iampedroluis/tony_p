@@ -15,7 +15,11 @@ module.exports = {
         'principal-white': '#F9FCFD',
         'bg-primary': '#0071E3',
         'color-primary': '#0071E3',
-        'dark-bgblack' : '#1D1D1F'
+        'dark-bgblack': '#1D1D1F',
+        'maestro': '#CD8DC3',
+        'alumno': '#4CDFDF',
+        'padre': '#88C25B',
+        'otro': '#your-other-color',
       },
     },
   },

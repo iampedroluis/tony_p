@@ -6,6 +6,7 @@ import { Home } from "./pages/Home";
 import {Registro } from "./pages/Registro.jsx"
 import { Posts } from "./pages/Posts.jsx";
 import {CreatePost } from "./pages/CreatePost.jsx"
+import {Admin} from "./pages/Admin.jsx"
 //Componentes
 import { Navbar } from "./component/Navbar";
 import { Footer } from "./component/Footer.jsx";
@@ -31,6 +32,7 @@ const Layout = () => {
           <Route element={<Registro/>}  path="/registro"/>
           <Route element={<Posts/> } path="/posts"/>
           <Route element={<CreatePost/>} path="/posts/create"/>
+          <Route element={<Admin/>} path="/admin"/>
           </Routes>
           <Footer></Footer>
           </BrowserRouter>

@@ -47,3 +47,48 @@ p.p-alerta{
 .swal-small{
     background-color: #ffffffef;
 }
+.transparent-table{
+    background-color: transparent;
+}
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th td:hover {
+  transition: 0.8s;
+  /* Ajusta el valor según tus preferencias */
+color:black;
+
+}
+
+.custom-page-class{
+    color: #1D1D1F; /* Cambia esto al color que desees */
+    cursor: pointer; /* Cambia esto según tus preferencias */
+    padding: 8px; 
+    transition: 0.3s;/* Añade relleno según tus preferencias */
+  }
+  .custom-page-class:hover {
+   text-decoration: underline #1D1D1F;
+   
+  }
+  .pagination .active {
+     /* Cambia esto al color que desees */
+    border-radius: 50%; /* Hace que sea un círculo */
+    color: #2a00e6;
+    
+    font-size: 18px;/* Cambia esto al color del texto que desees */
+    cursor: pointer; /* Cambia esto según tus preferencias */
+    padding: 8px; /* Añade relleno según tus preferencias */
+  }
+  
+  
+  /* Estilos CSS para cambiar el color del texto de "Anterior" */
+.custom-previous-class {
+    color: #1D1D1F; /* Cambia esto al color que desees */
+    cursor: pointer; /* Cambia esto según tus preferencias */
+    padding: 8px; /* Añade relleno según tus preferencias */
+  }
+  
+  /* Estilos CSS para cambiar el color del texto de "Siguiente" */
+  .custom-next-class {
+    color: #1D1D1F; /* Cambia esto al color que desees */
+    cursor: pointer; /* Cambia esto según tus preferencias */
+    padding: 8px; /* Añade relleno según tus preferencias */
+  }
