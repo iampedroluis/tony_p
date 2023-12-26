@@ -2,6 +2,10 @@ import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactPaginate from "react-paginate";
+import { Modal } from 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+
+
 
 export const Admin = () => {
   const { store, actions } = useContext(Context);
@@ -9,98 +13,8 @@ export const Admin = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const usuariosPerPage = 3;
 
- const usuarios = [
-    {
-      "id": 1,
-      "nombre": "John",
-      "apellido": "Doe",
-      "email": "john.doe@example.com",
-      "contraseña": "password123",
-      "role_id": 1
-    },
-    {
-      "id": 2,
-      "nombre": "Jane",
-      "apellido": "Smith",
-      "email": "jane.smith@example.com",
-      "contraseña": "securepass",
-      "role_id": 2
-    },
-    {
-      "id": 3,
-      "nombre": "Alice",
-      "apellido": "Johnson",
-      "email": "alice.johnson@example.com",
-      "contraseña": "mysecret",
-      "role_id": 3
-    },
-    {
-      "id": 4,
-      "nombre": "Bob",
-      "apellido": "Williams",
-      "email": "bob.williams@example.com",
-      "contraseña": "pass123",
-      "role_id": 1
-    },
-    {
-      "id": 5,
-      "nombre": "Eva",
-      "apellido": "Brown",
-      "email": "eva.brown@example.com",
-      "contraseña": "evapass",
-      "role_id": 2
-    },
-    {
-      "id": 6,
-      "nombre": "Carlos",
-      "apellido": "González",
-      "email": "carlos.gonzalez@example.com",
-      "contraseña": "carlospass",
-      "role_id": 3
-    },
-    {
-      "id": 7,
-      "nombre": "Maria",
-      "apellido": "López",
-      "email": "maria.lopez@example.com",
-      "contraseña": "marialove",
-      "role_id": 1
-    },
-    {
-      "id": 8,
-      "nombre": "Juan",
-      "apellido": "Perez",
-      "email": "juan.perez@example.com",
-      "contraseña": "juan123",
-      "role_id": 2
-    },
-    {
-      "id": 9,
-      "nombre": "Laura",
-      "apellido": "Ramirez",
-      "email": "laura.ramirez@example.com",
-      "contraseña": "laurapass",
-      "role_id": 3
-    },
-    {
-      "id": 10,
-      "nombre": "Pedro",
-      "apellido": "García",
-      "email": "pedro.garcia@example.com",
-      "contraseña": "pedropass",
-      "role_id": 1
-    },
-    {
-      "id": 11,
-      "nombre": "Sofía",
-      "apellido": "Martínez",
-      "email": "sofia.martinez@example.com",
-      "contraseña": "sofiapass",
-      "role_id": 2
-    }
-  ]
-  ;
-  
+ const usuarios =[]
+ const [showModal, setShowModal] = useState(false);
 
   const offset = currentPage * usuariosPerPage;
   const filteredUsuarios = usuarios.filter(
@@ -130,7 +44,27 @@ export const Admin = () => {
       default:
         return "otro";
     }
+    
   };
+
+const editUser = (
+<div className="container">
+  <div className="row">
+  <div className="col-3">
+  <p>Nombre</p>
+  </div>
+  <div className="col-3">
+  <p>Apellido</p>
+  </div>
+  <div className="col-3">
+  <p>email</p>
+  </div>
+  <div className="col-3">
+  <p>contrase</p>
+  </div>
+</div> 
+</div>)
+
 
   return (
     <div className="container h-screen mt-5">
@@ -192,7 +126,7 @@ export const Admin = () => {
                     <td className="bg-transparent" scope="row">
                       {usuario.nombre}
                     </td>
-                    <td className="bg-transparent">{usuario.apellido}</td>
+                    <td className="bg-transparent"><input value={usuario.apellido}></input></td>
                     <td className="bg-transparent">
                       <p className="inline-block">{usuario.email}</p>
                     </td>
@@ -241,6 +175,11 @@ export const Admin = () => {
           </div>
         </div>
       </div>
+     
+
+     
+      
+
     </div>
   );
 };
