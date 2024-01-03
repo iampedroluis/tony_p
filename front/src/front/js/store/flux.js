@@ -11,7 +11,25 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log(jsonBody)
         },
         login: async(jsonBody) =>{
-          console.log(jsonBody)
+          const url = process.env.REACT_APP_BACKEND_URL +  '/usuarios'
+          const options = {
+            method: "POST",
+            body: JSON.stringify(jsonBody),
+            headers:{
+              "content-Type": "application/json"
+            }
+          }
+          try{
+            const resp = await fetch(url, options);
+            if(resp.ok){
+              const data = await resp.json()
+              localStorage.setItem("userToken", data.token)
+              return {success : true}
+            }
+          }catch(error){
+            console.error(error)
+            return { success: false, error: "Error de red"}
+          }
         },
 
         getUsuarios: async () => {

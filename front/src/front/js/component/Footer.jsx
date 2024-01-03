@@ -5,7 +5,7 @@ import nazul from "../../img/nazul.png";
 
 export const Footer = () => {
     return (
-        <div className=" bg-[#1D1D1F] text-white text-center py-8">
+        <div className=" bg-[#1D1D1F] text-white text-center py-8 mt-5">
             <div className="flex flex-col items-center">
                 <img src={nazul} className="w-16 h-16 " alt="NexConnect Logo" />
                 <h5 className=" font-light">NexConnect</h5>

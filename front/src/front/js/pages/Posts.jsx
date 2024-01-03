@@ -4,7 +4,7 @@ import imagetest from "../../img/imgtest.jpg";
 
 export const Posts = () => {
     return (
-        <div className="container mt-5 d-flex flex-column align-items-center justify-content-center">
+        <div className="container mb-5 mt-5 d-flex flex-column align-items-center justify-content-center">
             <div className="col-12 mb-3 text-start">
                 <h2 className="text-3xl md:text-6xl font-bold text-dark-black dark:text-principal-white big-text">
                     Hola Fulano 👋 

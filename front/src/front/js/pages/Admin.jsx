@@ -58,6 +58,12 @@ export const Admin = () => {
     
   };
 
+  const roles = [
+    { id: 1, label: "Maestro" },
+    { id: 2, label: "Alumno" },
+    { id: 3, label: "Padre" },
+  ];
+
   const handleEdit = (user) => {
     setEditUser(user);
     setShowModal(true);
@@ -71,6 +77,7 @@ export const Admin = () => {
   const handleSaveChanges = () => {
     // Lógica para guardar los cambios del usuario editado
     // actions.editUser(editUser); // Asegúrate de tener una función editUser en tu store o actions
+    console.log("Usuario editado:", editUser);
     handleCloseModal();
   };
 
@@ -100,25 +107,25 @@ export const Admin = () => {
           </div>
         </div>
 
-        <div className="col-md-12 mt-5">
-          <div className="form registro dark:bg-gray-700 p-4 rounded border shadow p-3 mb-5 bg-body-tertiary rounded">
+        <div className="col-md-12  mt-5">
+          <div className="form registro  p-4 rounded border shadow p-3 mb-5 dark:bg-dark-black  rounded">
             <table className="table table-borderless bg-transparent table-hover ">
-              <thead>
+              <thead className="">
                 <tr className="bg-transparent">
-                  <th className="bg-transparent" scope="col">
-                    Nombre
+                  <th className="bg-transparent " scope="col">
+                    <p className="dark:text-principal-white">Nombre</p>
                   </th>
                   <th className="bg-transparent" scope="col">
-                    Apellido
+                  <p className="dark:text-principal-white">Apellido</p>
                   </th>
                   <th className="bg-transparent" scope="col">
-                    Email
+                  <p className="dark:text-principal-white">Email</p>
                   </th>
                   <th className="bg-transparent" scope="col">
-                    Rol
+                  <p className="dark:text-principal-white">Rol</p>
                   </th>
                   <th className="bg-transparent" scope="col">
-                    <p className="text-white">edit</p>
+                    <p className="text-transparent">edit</p>
                   </th>
                 </tr>
               </thead>
@@ -133,11 +140,11 @@ export const Admin = () => {
                     onMouseLeave={() => setHoveredUserId(null)}
                   >
                     <td className="bg-transparent" scope="row">
-                      {usuario.nombre}
+                    <p className="dark:text-principal-white">{usuario.nombre}</p>
                     </td>
-                    <td className="bg-transparent">{usuario.apellido}</td>
+                    <td className="bg-transparent"><p className="dark:text-principal-white">{usuario.apellido}</p></td>
                     <td className="bg-transparent">
-                      <p className="inline-block">{usuario.email}</p>
+                      <p className="inline-block dark:text-principal-white">{usuario.email}</p>
                     </td>
                     <td className="bg-transparent">
                       <p
@@ -157,7 +164,7 @@ export const Admin = () => {
                     <td className="bg-transparent">
                       {hoveredUserId === usuario.id && (
                         <button onClick={() => handleEdit(usuario)}>
-                  <i className="fa-solid fa-pencil"></i>
+                  <i className="fa-solid fa-pencil dark:text-principal-white"></i>
                 </button> 
                       )}
                     </td>
@@ -177,10 +184,10 @@ export const Admin = () => {
   pageRangeDisplayed={5}
   onPageChange={handlePageClick}
   containerClassName={"pagination"}
-  activeClassName={"active"}  // Clase para la página activa
-  pageClassName={"custom-page-class"}  // Clase para las páginas
-  previousClassName={"custom-previous-class"}  // Clase para "Anterior"
-  nextClassName={"custom-next-class"}  // Clase para "Siguiente"
+  activeClassName={"active dark:text-principal-white"}  // Clase para la página activa
+  pageClassName={"custom-page-class dark:text-principal-white"}  // Clase para las páginas
+  previousClassName={"custom-previous-class dark:text-principal-white"}  // Clase para "Anterior"
+  nextClassName={"custom-next-class dark:text-principal-white"}  // Clase para "Siguiente"
 />
             </div>
           </div>
@@ -188,63 +195,79 @@ export const Admin = () => {
       </div>
      
 {/* Modal para editar usuario */}
-<Modal show={showModal} onHide={handleCloseModal} className="text-center dark">
-  <Modal.Header closeButton>
-    <Modal.Title>Editar Usuario</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    {/* Formulario para editar el usuario */}
-    {editUser && (
-      <form>
-        <div className="mb-3">
-          <label htmlFor="nombre" className="form-label">
-            Nombre
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="nombre"
-            value={editUser.nombre}
-            onChange={(e) => setEditUser({ ...editUser, nombre: e.target.value })}
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="apellido" className="form-label">
-            Apellido
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="apellido"
-            value={editUser.apellido}
-            onChange={(e) => setEditUser({ ...editUser, apellido: e.target.value })}
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Correo Electrónico
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={editUser.email}
-            onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
-          />
-        </div>
-        {/* Agregar campos adicionales para editar (Apellido, email, etc.) */}
-      </form>
-    )}
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={handleCloseModal}>
-      Cerrar
-    </Button>
-    <Button variant="primary" onClick={handleSaveChanges}>
-      Guardar Cambios
-    </Button>
-  </Modal.Footer>
-</Modal>
+<Modal show={showModal} onHide={handleCloseModal} className="text-center ">
+      <Modal.Header className="dark:bg-dark-black" closeButton>
+        <Modal.Title className="dark:bg-dark-black">Editar Usuario</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="dark:bg-dark-black">
+        {/* Formulario para editar el usuario */}
+        {editUser && (
+          <form className=" dark:text-principal-white">
+            <div className="mb-3 text-start">
+              <label htmlFor="nombre" className="form-label text-dark-black">
+                Nombre
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="nombre"
+                value={editUser.nombre}
+                onChange={(e) => setEditUser({ ...editUser, nombre: e.target.value })}
+              />
+            </div>
+            <div className="mb-3 text-start">
+              <label htmlFor="apellido" className="form-label text-dark-black">
+                Apellido
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="apellido"
+                value={editUser.apellido}
+                onChange={(e) => setEditUser({ ...editUser, apellido: e.target.value })}
+              />
+            </div>
+            <div className="mb-3 text-start">
+              <label htmlFor="email" className="form-label text-dark-black">
+                Correo Electrónico
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                value={editUser.email}
+                onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+              />
+            </div>
+            <div className="mb-3 text-start">
+              <label htmlFor="rol" className="form-label  text-dark-black">
+                Rol
+              </label>
+              <select
+                className="form-select"
+                id="rol"
+                value={editUser.role_id}
+                onChange={(e) => setEditUser({ ...editUser, role_id: parseInt(e.target.value) })}
+              >
+                {roles.map((role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </form>
+        )}
+      </Modal.Body>
+      <Modal.Footer className="dark:bg-dark-black">
+        <Button variant="secondary" onClick={handleCloseModal}>
+          Cerrar
+        </Button>
+        <Button variant="primary" onClick={handleSaveChanges}>
+          Guardar Cambios
+        </Button>
+      </Modal.Footer>
+    </Modal>
 
      
       

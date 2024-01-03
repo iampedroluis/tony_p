@@ -58,23 +58,23 @@ export const Home = () => {
     };
 
     return (
-        <div className="container h-screen mt-5" >
+        <div className="container h-screen mt-5 mb-11" >
             <div className="row">
                 <div className="col-12 mb-3 text-center">
                 <h2 className="text-3xl md:text-6xl font-bold text-center text-dark-black dark:text-principal-white big-text">
                         NexConnect
                     </h2>
                 </div>
-                <div className="col-md-6 mb-3">
+                <div className="col-md-6 mb-3 mt-5">
                     <img src={Postimg} alt="Posts" className="w-100 h-auto" />
                 </div>
-                <div className="col-md-6 mt-5">
-                    <div className="form registro bg-white dark:bg-gray-700 p-4 rounded border shadow p-3 mb-5 bg-body-tertiary rounded">
-                        <div className="mb-3">
+                <div className="col-md-6 mt-5 ">
+                    <div className="form registro rounded shadow  mb-5 dark:bg-dark-black h-100 p-4 pt-5 ">
+                        <div className="mb-3 mt-5 ">
                             
                             <input
                                 type="email"
-                                className="form-control mb-2"
+                                className="form-control mb-4 "
                                 placeholder="tuemail@email.com"
                                 name="email"
                                 value={formData.email}
@@ -82,7 +82,7 @@ export const Home = () => {
                             />
                             <input
                                 type="password"
-                                className="form-control mb-2"
+                                className="form-control mb-4"
                                 placeholder="Tu Contraseña"
                                 name="password"
                                 value={formData.password}
@@ -90,7 +90,7 @@ export const Home = () => {
                             />
                             
                             <div className="text-center">
-                                <button type="button" className="btn btn-outline-dark" onClick={handleSubmit}>
+                                <button type="button" className="btn bg-dark-black  mt-4 text-principal-white border-2 hover:bg-principal-white hover:border-dark-black hover:text-dark-black" onClick={handleSubmit}>
                                     Iniciar Sesion
                                 </button>
                                 {loginError ? (

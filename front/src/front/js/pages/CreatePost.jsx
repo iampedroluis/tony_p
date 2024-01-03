@@ -114,11 +114,11 @@ export const CreatePost = () => {
           </h2>
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="container mt-4 rounded-2xl border-5  shadow-2xl border-[#F9FCFD] bg-[#F9FCFD] p-5 ">
+      <form onSubmit={handleSubmit} className="">
+        <div className="container dark:bg-dark-black dark:border-dark-black mt-4 rounded-2xl border-5  shadow-2xl border-[#F9FCFD] bg-[#F9FCFD] p-5 ">
           <div className="container  whitespace-normal md:whitespace-pre">
             <div className="mb-3">
-              <label htmlFor="titulo" className="form-label text-dark-black font-bold">
+              <label htmlFor="titulo" className="form-label text-dark-black font-bold dark:text-principal-white ">
                 Título:
               </label>
               <input
@@ -132,7 +132,7 @@ export const CreatePost = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="descripcion" className="form-label text-dark-black font-bold">
+              <label htmlFor="descripcion" className="form-label text-dark-black font-bold dark:text-principal-white " >
                 Descripción:
               </label>
               <textarea
@@ -146,7 +146,7 @@ export const CreatePost = () => {
               ></textarea>
             </div>
             <div className="mb-3">
-              <label htmlFor="imagen" className="form-label text-dark-black font-bold">
+              <label htmlFor="imagen" className="form-label text-dark-black font-bold dark:text-principal-white ">
                 Añadir imágenes:
               </label>
               <input
@@ -159,7 +159,7 @@ export const CreatePost = () => {
               />
             </div>
             <div className="mb-3 ">
-              <label htmlFor="pdf" className="form-label text-dark-black font-bold">
+              <label htmlFor="pdf" className="form-label text-dark-black font-bold dark:text-principal-white ">
                 Añadir PDF:
               </label>
               <input
@@ -171,12 +171,12 @@ export const CreatePost = () => {
               />
             </div>
             <div className="mb-3 d-flex  justify-between ">
-              <label htmlFor="postear_a" className="form-label text-dark-black font-bold">
+              <label htmlFor="postear_a" className="form-label text-dark-black font-bold dark:text-principal-white ">
                 Postear a:
               </label>
               <div className="dropdown">
                 <button
-                  className="btn text-principal-white bg-dark-black border-dark-black hover:text-dark-black hover:border-dark-black"
+                  className="btn text-principal-white bg-dark-black border-dark-black hover:text-dark-black hover:border-dark-black dark:bg-principal-white dark:text-dark-black"
                   type="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
