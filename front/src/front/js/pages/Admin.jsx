@@ -2,7 +2,9 @@ import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-import { Modal } from 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { Button, Modal } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css"; 
+
 
 
 
@@ -12,9 +14,18 @@ export const Admin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const usuariosPerPage = 3;
-
- const usuarios =[]
  const [showModal, setShowModal] = useState(false);
+  const [editUser, setEditUser] = useState(null);
+  const usuarios = [
+    { id: 1, nombre: "Juan", apellido: "Pérez", email: "juan@example.com", role_id: 1 },
+    { id: 2, nombre: "María", apellido: "Gómez", email: "maria@example.com", role_id: 2 },
+    { id: 3, nombre: "Carlos", apellido: "Martínez", email: "carlos@example.com", role_id: 3 },
+    { id: 4, nombre: "Laura", apellido: "López", email: "laura@example.com", role_id: 1 },
+    { id: 5, nombre: "Pedro", apellido: "Rodríguez", email: "pedro@example.com", role_id: 2 },
+  ];
+  
+  // Puedes utilizar este array en lugar del array vacío que tenías en tu código.
+  
 
   const offset = currentPage * usuariosPerPage;
   const filteredUsuarios = usuarios.filter(
@@ -47,23 +58,21 @@ export const Admin = () => {
     
   };
 
-const editUser = (
-<div className="container">
-  <div className="row">
-  <div className="col-3">
-  <p>Nombre</p>
-  </div>
-  <div className="col-3">
-  <p>Apellido</p>
-  </div>
-  <div className="col-3">
-  <p>email</p>
-  </div>
-  <div className="col-3">
-  <p>contrase</p>
-  </div>
-</div> 
-</div>)
+  const handleEdit = (user) => {
+    setEditUser(user);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setEditUser(null);
+    setShowModal(false);
+  };
+
+  const handleSaveChanges = () => {
+    // Lógica para guardar los cambios del usuario editado
+    // actions.editUser(editUser); // Asegúrate de tener una función editUser en tu store o actions
+    handleCloseModal();
+  };
 
 
   return (
@@ -126,7 +135,7 @@ const editUser = (
                     <td className="bg-transparent" scope="row">
                       {usuario.nombre}
                     </td>
-                    <td className="bg-transparent"><input value={usuario.apellido}></input></td>
+                    <td className="bg-transparent">{usuario.apellido}</td>
                     <td className="bg-transparent">
                       <p className="inline-block">{usuario.email}</p>
                     </td>
@@ -147,7 +156,9 @@ const editUser = (
                     </td>
                     <td className="bg-transparent">
                       {hoveredUserId === usuario.id && (
-                        <i className="fa-solid fa-pencil"></i>
+                        <button onClick={() => handleEdit(usuario)}>
+                  <i className="fa-solid fa-pencil"></i>
+                </button> 
                       )}
                     </td>
                   </tr>
@@ -176,6 +187,64 @@ const editUser = (
         </div>
       </div>
      
+{/* Modal para editar usuario */}
+<Modal show={showModal} onHide={handleCloseModal} className="text-center dark">
+  <Modal.Header closeButton>
+    <Modal.Title>Editar Usuario</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {/* Formulario para editar el usuario */}
+    {editUser && (
+      <form>
+        <div className="mb-3">
+          <label htmlFor="nombre" className="form-label">
+            Nombre
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="nombre"
+            value={editUser.nombre}
+            onChange={(e) => setEditUser({ ...editUser, nombre: e.target.value })}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="apellido" className="form-label">
+            Apellido
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="apellido"
+            value={editUser.apellido}
+            onChange={(e) => setEditUser({ ...editUser, apellido: e.target.value })}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Correo Electrónico
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            value={editUser.email}
+            onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+          />
+        </div>
+        {/* Agregar campos adicionales para editar (Apellido, email, etc.) */}
+      </form>
+    )}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={handleCloseModal}>
+      Cerrar
+    </Button>
+    <Button variant="primary" onClick={handleSaveChanges}>
+      Guardar Cambios
+    </Button>
+  </Modal.Footer>
+</Modal>
 
      
       
