@@ -418,14 +418,7 @@ app.put('/informacion/:id', async (req, res, next) => {
       const bearer = bearerHeader.split(' ');
       const bearerToken = bearer[1];
   
-      try {
-        const decoded = jwt.verify(bearerToken, 'tu_secreto_secreto');
-        const { rol_id: rolToken } = decoded; // Renombrar rol_id del token a rolToken
-  
-        if (rolToken !== 1) {
-          return res.status(403).json({ error: 'Acceso denegado' });
-        }
-  
+      try {  
         // Verificar si el correo ya existe en algún usuario
         const existingUser = await pool.query('SELECT * FROM usuarios WHERE email = ?', [email]);
   
