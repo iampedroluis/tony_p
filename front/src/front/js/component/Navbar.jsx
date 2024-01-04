@@ -1,25 +1,26 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Context } from "../store/appContext";
 import nblanco from "../../img/nblanco.png";
 
-
 export const Navbar = () => {
-    const { store, actions } = useContext(Context);
-    const [darkMode, setDarkMode] = useState(() => {
-      // Inicializa el estado con el valor almacenado en localStorage o false por defecto
-      return localStorage.getItem("darkMode") === "true" ? true : false;
-    });
-  
-    useEffect(() => {
-      // Actualiza el valor en localStorage cada vez que cambia el estado
-      localStorage.setItem("darkMode", darkMode);
-      document.body.classList.toggle('dark', darkMode);
-    }, [darkMode]);
-  
-    const toggleDarkMode = () => {
-      setDarkMode(!darkMode);
-    };
+  const { store, actions } = useContext(Context);
+  const location = useLocation();
+  const [darkMode, setDarkMode] = useState(() => {
+    // Inicializa el estado con el valor almacenado en localStorage o false por defecto
+    return localStorage.getItem("darkMode") === "true" ? true : false;
+  });
+
+  useEffect(() => {
+    // Actualiza el valor en localStorage cada vez que cambia el estado
+    localStorage.setItem("darkMode", darkMode);
+    document.body.classList.toggle('dark', darkMode);
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-primary">
       <div className="container mx-5">
@@ -39,16 +40,34 @@ export const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link className="nav-link text-white font-extralight" to="/registro">
-                Registrarse
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-white font-extralight" to="/">
-                Iniciar sesión
-              </Link>
-            </li>
+            {location.pathname == "/" && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link text-white font-extralight" to="/registro">
+                    Registrarse
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-white font-extralight" to="/">
+                    Iniciar sesión
+                  </Link>
+                </li>
+              </>
+            )}
+            {location.pathname === "/posts" && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link text-white font-extralight" to="/posts/create">
+                    Crear posts
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-white font-extralight" to="/admin">
+                    Admin
+                  </Link>
+                </li>
+              </>
+            )}
             <li className="nav-item d-flex align-items-center">
               {/* Cambiar entre íconos de sol y luna según el modo actual */}
               <button className="bg-transparent border-0" onClick={toggleDarkMode}>
@@ -62,7 +81,6 @@ export const Navbar = () => {
           </ul>
         </div>
       </div>
-      
     </nav>
   );
 };
