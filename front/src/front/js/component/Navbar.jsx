@@ -20,7 +20,9 @@ export const Navbar = () => {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-
+  const handleLogout = ()=>{
+    actions.logout()
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-primary">
       <div className="container mx-5">
@@ -66,6 +68,7 @@ export const Navbar = () => {
                     Admin
                   </Link>
                 </li>
+                
               </>
             )}
             <li className="nav-item d-flex align-items-center">
@@ -78,6 +81,9 @@ export const Navbar = () => {
                 )}
               </button>
             </li>
+            <li className="nav-item align-items-center d-flex ms-5">
+                  <button onClick={handleLogout}><i class="fa-solid fa-power-off align-items-center"></i></button>
+                </li>
           </ul>
         </div>
       </div>

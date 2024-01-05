@@ -1,41 +1,50 @@
-import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 // Pages 
 import { Home } from "./pages/Home";
-import {Registro } from "./pages/Registro.jsx"
+import { Registro } from "./pages/Registro.jsx";
 import { Posts } from "./pages/Posts.jsx";
-import {CreatePost } from "./pages/CreatePost.jsx"
-import {Admin} from "./pages/Admin.jsx"
-//Componentes
+import { CreatePost } from "./pages/CreatePost.jsx";
+import { Admin } from "./pages/Admin.jsx";
+// Componentes
 import { Navbar } from "./component/Navbar";
 import { Footer } from "./component/Footer.jsx";
 
-//Contexto
+// Contexto
 import { Context } from "./store/appContext";
 import injectContext from "./store/appContext";
 
-
-
-//create your first component
 const Layout = () => {
-  const { store, actions } = useContext(Context);
-  
-  const basename = process.env.BASENAME || "";
+  const { store } = useContext(Context);
+
+  useEffect(() => {
+    // Realizar alguna lógica si es necesario cuando el token cambia
+  }, [store.token]);
 
   return (
-    <div >
-      <BrowserRouter basename={basename}>
-          <Navbar></Navbar>
-          <Routes>
+    <div>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
           <Route element={<Home />} path="/" />
-          <Route element={<Registro/>}  path="/registro"/>
-          <Route element={<Posts/> } path="/posts"/>
-          <Route element={<CreatePost/>} path="/posts/create"/>
-          <Route element={<Admin/>} path="/admin"/>
-          </Routes>
-          <Footer></Footer>
-          </BrowserRouter>
+          <Route element={<Registro />} path="/registro" />
+          {!store.token ? (
+            <>
+              <Route element={<Navigate to="/" replace />} path="/posts*" />
+              <Route element={<Navigate to="/" replace />} path="/admin*" />
+              <Route element={<Navigate to="/" replace />} path="/posts/create*" />
+            </>
+          ) : (
+            <>
+              <Route element={<Posts />} path="/posts" />
+              <Route element={<CreatePost />} path="/posts/create" />
+              <Route element={<Admin />} path="/admin" />
+            </>
+          )}
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </div>
   );
 };

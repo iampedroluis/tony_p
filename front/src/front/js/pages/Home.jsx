@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import Postimg from "../../img/posts-img.png";
@@ -6,7 +6,8 @@ import Postimg from "../../img/posts-img.png";
 export const Home = () => {
     const { store, actions } = useContext(Context);
     const [loginError , setLoginError] = useState(null)
-    const [errMsg, setErrMsg] = useState("")
+    const navigate = useNavigate()
+    const [errMsg, setErrMsg] = useState()
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -26,14 +27,12 @@ export const Home = () => {
         return regex.test(email);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Validación de campos vacíos
         for (const key in formData) {
             if (formData[key] === "") {
-                
                 setLoginError(true);
                 setErrMsg(`El campo ${key} no puede estar vacío.`);
-            
                 return;
             }
         }
@@ -42,20 +41,32 @@ export const Home = () => {
             setErrMsg("Por favor, introduce un correo electrónico válido.");
             return;
         }
-       
+    
         // Enviar datos al backend o realizar acciones necesarias
-        actions.login(formData);
-
+        const result = await actions.login(formData);
+    
+        if (result.success) {
+            // Redireccionar a /posts en caso de éxito
+            navigate('/posts');
+        } else {
+            // Mostrar mensaje de error en el front
+            setLoginError(true);
+            setErrMsg("Credenciales inválidas");
+            console.log(errMsg)
+            return
+        }
+    
         // Limpiar el formulario después del registro exitoso
         setFormData({
-            
             email: "",
             password: ""
-           
         });
         setLoginError(false);
-        
     };
+    useEffect(() => {
+        // Se ejecutará cada vez que errMsg se actualice
+        console.log(errMsg);
+    }, [errMsg]);
 
     return (
         <div className="container h-screen mt-5 mb-11" >

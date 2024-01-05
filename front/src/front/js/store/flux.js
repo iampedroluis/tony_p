@@ -1,36 +1,48 @@
 const getState = ({ getStore, getActions, setStore }) => {
-   
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
   
     return {
       store: {
-        usuarios:[]
+        usuarios:[],
+        token:null
+        
       },
   
       actions: {
         createUser: async(jsonBody)=>{
           console.log(jsonBody)
         },
-        login: async(jsonBody) =>{
-          const url = process.env.REACT_APP_BACKEND_URL +  '/usuarios'
+        login: async (jsonBody) => {
+          const url = `${backendUrl}/login`;
           const options = {
-            method: "POST",
-            body: JSON.stringify(jsonBody),
-            headers:{
-              "content-Type": "application/json"
-            }
+              method: "POST",
+              body: JSON.stringify(jsonBody),
+              headers: {
+                  "Content-Type": "application/json"
+              }
+          };
+      
+          try {
+              const resp = await fetch(url, options);
+              if (resp.ok) {
+                  const data = await resp.json();
+                  localStorage.setItem("userToken", data.token);
+                  await setStore({token: data.token})
+                  return { success: true };
+              } else {
+                  const errorData = await resp.json();
+                  console.log(errorData)
+                  return { success: false, error: errorData.error || "Error de autenticación" };
+              }
+          } catch (error) {
+              console.error(error);
+              return { success: false, error: "Error de red" };
           }
-          try{
-            const resp = await fetch(url, options);
-            if(resp.ok){
-              const data = await resp.json()
-              localStorage.setItem("userToken", data.token)
-              return {success : true}
-            }
-          }catch(error){
-            console.error(error)
-            return { success: false, error: "Error de red"}
-          }
-        },
+      },
+      logout:()=> {
+        localStorage.removeItem('userToken')
+        setStore({token:null})
+      },
 
         getUsuarios: async () => {
           console.log(process.env.REACT_APP_BACKEND_URL)
