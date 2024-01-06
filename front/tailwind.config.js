@@ -19,6 +19,7 @@ module.exports = {
         'maestro': '#CD8DC3',
         'alumno': '#4CDFDF',
         'padre': '#88C25B',
+        'admin': '#0101DF',
         'otro': '#your-other-color',
       },
     },

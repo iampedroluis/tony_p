@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactPaginate from "react-paginate";
@@ -16,13 +16,7 @@ export const Admin = () => {
   const usuariosPerPage = 3;
  const [showModal, setShowModal] = useState(false);
   const [editUser, setEditUser] = useState(null);
-  const usuarios = [
-    { id: 1, nombre: "Juan", apellido: "Pérez", email: "juan@example.com", role_id: 1 },
-    { id: 2, nombre: "María", apellido: "Gómez", email: "maria@example.com", role_id: 2 },
-    { id: 3, nombre: "Carlos", apellido: "Martínez", email: "carlos@example.com", role_id: 3 },
-    { id: 4, nombre: "Laura", apellido: "López", email: "laura@example.com", role_id: 1 },
-    { id: 5, nombre: "Pedro", apellido: "Rodríguez", email: "pedro@example.com", role_id: 2 },
-  ];
+const [usuarios , setUsuarios] = useState([])
   
   // Puedes utilizar este array en lugar del array vacío que tenías en tu código.
   
@@ -47,11 +41,13 @@ export const Admin = () => {
   const getRoleColor = (roleId) => {
     switch (roleId) {
       case 1:
-        return "maestro";
+        return "admin";
       case 2:
-        return "alumno";
+        return "maestro";
       case 3:
-        return "padre";
+        return "alumno";
+      case 4:
+        return "padre"
       default:
         return "otro";
     }
@@ -59,9 +55,10 @@ export const Admin = () => {
   };
 
   const roles = [
-    { id: 1, label: "Maestro" },
-    { id: 2, label: "Alumno" },
-    { id: 3, label: "Padre" },
+    { id: 1, label: "Admin" },
+    { id: 2, label: "Maestro" },
+    { id: 3, label: "Alumno" },
+    {id:4, label: "Padres"}
   ];
 
   const handleEdit = (user) => {
@@ -80,6 +77,21 @@ export const Admin = () => {
     console.log("Usuario editado:", editUser);
     handleCloseModal();
   };
+
+  useEffect(() => {
+    // Función asincrónica para obtener los usuarios
+    const fetchUsuarios = async () => {
+      try {
+        const data = await actions.getUsuarios();
+        setUsuarios(data);
+      } catch (error) {
+        console.error("Error fetching usuarios", error);
+      }
+    };
+
+    // Llamada a la función asincrónica
+    fetchUsuarios();
+  }, [currentPage, actions.getUsuarios]);
 
 
   return (
@@ -149,16 +161,18 @@ export const Admin = () => {
                     <td className="bg-transparent">
                       <p
                         className={`text-white font-black inline-block rounded px-2 text-center capitalize ${
-                          usuario.role_id === 1
+                          usuario.rol_id === 1
+                            ? "bg-admin"
+                            : usuario.rol_id === 2
                             ? "bg-maestro"
-                            : usuario.role_id === 2
+                            : usuario.rol_id === 3
                             ? "bg-alumno"
-                            : usuario.role_id === 3
+                            :usuario.rol_id === 4
                             ? "bg-padre"
                             : "bg-otro"
                         }`}
                       >
-                        {getRoleColor(usuario.role_id)}
+                        {getRoleColor(usuario.rol_id)}
                       </p>
                     </td>
                     <td className="bg-transparent">
@@ -246,8 +260,8 @@ export const Admin = () => {
               <select
                 className="form-select"
                 id="rol"
-                value={editUser.role_id}
-                onChange={(e) => setEditUser({ ...editUser, role_id: parseInt(e.target.value) })}
+                value={editUser.rol_id}
+                onChange={(e) => setEditUser({ ...editUser, rol_id: parseInt(e.target.value) })}
               >
                 {roles.map((role) => (
                   <option key={role.id} value={role.id}>

@@ -60,11 +60,12 @@ const getState = ({ getStore, getActions, setStore }) => {
         getUsuarios: async () => {
           console.log(process.env.REACT_APP_BACKEND_URL)
           const url = "http://localhost:3000/usuarios";
-          
+          const { token } = getStore();
           const options = {
             method: "GET",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "Authorization": 'Bearer ' + token
               
             },
           };
