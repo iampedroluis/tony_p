@@ -1,47 +1,28 @@
-import React, { useState, useEffect } from "react";
-import imagetest from "../../img/imgtest.jpg";
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "../store/appContext";
+
 
 export const Posts = () => {
+  const { store, actions } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState(0);
   const [expandedDescription, setExpandedDescription] = useState([]);
+  const [posts, setPosts] = useState([])
 
-  const Posts = [
-    {
-      rol_id: 1,
-      url_imagen: 'https://picsum.photos/300',
-      
-      titulo: 'Título de Prueba 1',
-      descripcion: 'Descripción corta de prueba 1'
-    },
-    {
-      rol_id: 2,
-      url_imagen: 'https://picsum.photos/200',
-      url_archivo: 'https://www.orimi.com/pdf-test.pdf',
-      titulo: 'Título de Prueba 2',
-      descripcion: 'Descripción corta de prueba 2'
-    },
-    {
-      rol_id: 3,
-      url_imagen: 'https://picsum.photos/800',
-      url_archivo: 'https://www.orimi.com/pdf-test.pdf',
-      titulo: 'Título de Prueba 3',
-      descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum mattis consectetur libero vel venenatis. Nulla sem sapien, vulputate sed augue eget, bibendum pellentesque lectus. Quisque ut tincidunt odio. Integer sit amet justo consequat, semper nisi id, pharetra lorem. Suspendisse potenti. Vivamus in nunc nibh. Pellentesque sapien est, mattis eget consectetur eu, feugiat vel justo. Curabitur placerat sem nec hendrerit vestibulum. Aenean auctor varius nisl vitae euismod. Curabitur aliquet elit vel nibh maximus cursus. Fusce iaculis venenatis ipsum et ornare. Donec viverr'
-    },
-    {
-      rol_id: 1,
-      url_imagen: 'https://picsum.photos/20',
-      
-      titulo: 'Título de Prueba 4',
-      descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum mattis consectetur libero vel venenatis. Nulla sem sapien, vulputate sed augue eget, bibendum pellentesque lectus. Quisque ut tincidunt odio. Integer sit amet justo consequat, semper nisi id, pharetra lorem. Suspendisse potenti. Vivamus in nunc nibh. Pellentesque sapien est, mattis eget consectetur eu, feugiat vel justo. Curabitur placerat sem nec hendrerit vestibulum. Aenean auctor varius nisl vitae euismod. Curabitur aliquet elit vel nibh maximus cursus. Fusce iaculis venenatis ipsum et ornare. Donec viverra mattis enim nec convallis. Phasellus eleifend sem mi, vel hendrerit ex sagittis vel. '
-    },
-    {
-      rol_id: 2,
-      url_imagen: 'https://picsum.photos/240',
-      url_archivo: 'https://www.orimi.com/pdf-test.pdf',
-      titulo: 'Título de Prueba 5',
-      descripcion: 'Descripción corta de prueba 5'
+useEffect(() => {
+  const fetchData = async () => {
+    // Llama a la acción para obtener los posts
+    const result = await actions.getPosts();
+
+    // Si la llamada fue exitosa, actualiza el estado posts
+    if (result.success) {
+      setPosts(store.posts);
     }
-  ];
+  };
+
+  // Llama a fetchData cuando el componente se monta
+  fetchData();
+}, [store.posts]);
+
 
   useEffect(() => {
     const handleImageLoad = () => {
@@ -79,7 +60,7 @@ export const Posts = () => {
           Hola Fulano 👋
         </h2>
       </div>
-      {Posts.map((post, index) => (
+      {posts.map((post, index) => (
         <div key={index} className="card w-75 h-100 border-5 shadow-2xl border-[#F9FCFD] bg-[#F9FCFD] mt-5 mb-3" style={{ maxWidth: '540px' }}>
           <div className="row g-0">
             <div className="col-md-4">

@@ -66,6 +66,10 @@ export const Home = () => {
     useEffect(() => {
         // Se ejecutará cada vez que errMsg se actualice
         console.log(errMsg);
+        // verifica si el usuario esta logeado no muestra el home 
+        if (store.token){
+            navigate('/posts');
+        }
     }, [errMsg]);
 
     return (

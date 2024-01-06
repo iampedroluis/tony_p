@@ -1,10 +1,22 @@
+//const jwt = require('jsonwebtoken');
 const getState = ({ getStore, getActions, setStore }) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  /*
+  function obtenerInformacionToken(token) {
+    try {
+      const decoded = jwt.decode(token);
+      return decoded;
+    } catch (error) {
+      return { error: 'Token inválido' };
+    }
+  }
+  */
   
     return {
       store: {
         usuarios:[],
-        token:null
+        token: localStorage.getItem('userToken'),
+        posts:[]
         
       },
   
@@ -72,6 +84,34 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.log("Error loading message from backend", error);
           }
         },
+        
+        getPosts: async ()=>{
+          const { token } = getStore();
+          const url = `${backendUrl}/informacion`;
+          const options = {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": 'Bearer ' + token
+              }
+          };
+          try {
+            const resp = await fetch(url, options);
+            if (resp.ok) {
+                const data = await resp.json();
+                await setStore({posts: data})
+                return { success: true };
+            } else {
+                const errorData = await resp.json();
+                console.log(errorData)
+                return { success: false, msg : "No Hay Posts Generados" };
+            }
+        } catch (error) {
+            console.error(error);
+            return { success: false, error: "Error de red" };
+        }
+        }
+        
       },
     };
   };
