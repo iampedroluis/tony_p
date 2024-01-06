@@ -6,7 +6,7 @@ const getState = ({ getStore, getActions, setStore }) => {
   
     return {
       store: {
-        user_role_id:null,
+        user_role_id:0,
         usuarios:[],
         token: localStorage.getItem('userToken'),
         posts:[]
@@ -54,6 +54,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       logout:()=> {
         localStorage.removeItem('userToken')
         setStore({token:null})
+        setStore({user_role_id: 0})
       },
 
         getUsuarios: async () => {
