@@ -8,4 +8,5 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'jquery';
 import 'popper.js';
 
+
 ReactDOM.render(<Layout/>, document.querySelector("#app"))

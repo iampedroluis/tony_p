@@ -1,19 +1,12 @@
-//const jwt = require('jsonwebtoken');
+import { jwtDecode } from 'jwt-decode';
 const getState = ({ getStore, getActions, setStore }) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
-  /*
-  function obtenerInformacionToken(token) {
-    try {
-      const decoded = jwt.decode(token);
-      return decoded;
-    } catch (error) {
-      return { error: 'Token inválido' };
-    }
-  }
-  */
+  
+
   
     return {
       store: {
+        user_role_id:null,
         usuarios:[],
         token: localStorage.getItem('userToken'),
         posts:[]
@@ -38,9 +31,16 @@ const getState = ({ getStore, getActions, setStore }) => {
               const resp = await fetch(url, options);
               if (resp.ok) {
                   const data = await resp.json();
+                  
                   localStorage.setItem("userToken", data.token);
                   await setStore({token: data.token})
+                  
+                  
+                  let decode = jwtDecode(data.token);
+                  let rol_id = decode.rol_id
+                  await setStore({user_role_id:rol_id})
                   return { success: true };
+
               } else {
                   const errorData = await resp.json();
                   console.log(errorData)
