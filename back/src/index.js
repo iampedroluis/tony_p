@@ -5,6 +5,10 @@ import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 config()
 
@@ -20,6 +24,34 @@ const pool = createPool({
     password:  process.env.MYSQLDB_ROOT_PASSWORD,
     port:  process.env.MYSQLDB_DOCKER_PORT
 })
+
+//----------------------------------------------------
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      let destinationPath;
+
+      if (file.fieldname === "foto") {
+        destinationPath = 'fotos/';
+      } else if (file.fieldname === "archivo") {
+        destinationPath = 'archivos/';
+      }
+
+      // Crear el directorio si no existe
+      if (!fs.existsSync(destinationPath)) {
+        fs.mkdirSync(destinationPath, { recursive: true });
+      }
+
+      cb(null, destinationPath);
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname);
+    }
+  })
+});
+
+
+//----------------------------------------------------
 
 app.use(cors());
 
@@ -213,36 +245,44 @@ app.put('/roles/:id', async (req, res, next) => {
   }
 });
 
-app.post('/informacion', async (req, res, next) => {
-    const { rol_id, url_imagen, url_archivo, titulo, descripcion } = req.body;
-    const bearerHeader = req.headers['authorization'];
-  
-    if (typeof bearerHeader !== 'undefined') {
+app.post('/informacion', 
+  upload.fields([
+    { name: 'foto', maxCount: 1 },
+    { name: 'archivo', maxCount: 1 }
+  ]), 
+  async (req, res, next) => {
+    const { rol_id, titulo, descripcion } = req.body;
+    const url_imagen = req.files['foto'] && req.files['foto'].length > 0 ? req.files['foto'][0].path : null;
+    const url_archivo = req.files['archivo'] && req.files['archivo'].length > 0 ? req.files['archivo'][0].path : null;
+
+
+  const bearerHeader = req.headers['authorization'];
+
+  if (typeof bearerHeader !== 'undefined') {
       const bearer = bearerHeader.split(' ');
       const bearerToken = bearer[1];
-  
+
       try {
-        const decoded = jwt.verify(bearerToken, 'tu_secreto_secreto');
-        const { rol_id: userRolId } = decoded;
-  
-        if (userRolId !== 1) {
-          return res.status(403).json({ error: 'Acceso denegado' });
-        }
-  
-        // Solo el rol_id igual a 1 puede agregar datos a la tabla informacion
-        await pool.query(
-          'INSERT INTO informacion (rol_id, url_imagen, url_archivo, titulo, descripcion) VALUES (?, ?, ?, ?, ?)',
-          [rol_id, url_imagen, url_archivo, titulo, descripcion]
-        );
-  
-        res.status(201).json({ message: 'Información creada exitosamente' });
+          const decoded = jwt.verify(bearerToken, 'tu_secreto_secreto');
+          const { rol_id: userRolId } = decoded;
+
+          if (userRolId !== 1) {
+              return res.status(403).json({ error: 'Acceso denegado' });
+          }
+
+          await pool.query(
+              'INSERT INTO informacion (rol_id, url_imagen, url_archivo, titulo, descripcion) VALUES (?, ?, ?, ?, ?)',
+              [rol_id, url_imagen, url_archivo, titulo, descripcion]
+          );
+
+          res.status(201).json({ message: 'Información creada exitosamente' });
       } catch (err) {
-        next(err); // Pasar el error al middleware de manejo centralizado
+          next(err); // Manejo de errores
       }
-    } else {
+  } else {
       res.sendStatus(403); // No se proporcionó el token de portador
-    }
-  });
+  }
+});
 
 app.delete('/informacion/:id', async (req, res, next) => {
     const { id } = req.params;
@@ -272,37 +312,53 @@ app.delete('/informacion/:id', async (req, res, next) => {
     }
   });
 
-app.put('/informacion/:id', async (req, res, next) => {
+  app.put('/informacion/:id', 
+  upload.fields([
+    { name: 'foto', maxCount: 1 },
+    { name: 'archivo', maxCount: 1 }
+  ]), 
+  async (req, res, next) => {
     const { id } = req.params;
-    const { rol_id, url_imagen, url_archivo, titulo, descripcion } = req.body;
+    const { rol_id, titulo, descripcion } = req.body;
+
+    // Obtiene las nuevas rutas de archivo, si se subieron archivos
+    const url_imagen = req.files['foto'] && req.files['foto'].length > 0 ? req.files['foto'][0].path : null;
+    const url_archivo = req.files['archivo'] && req.files['archivo'].length > 0 ? req.files['archivo'][0].path : null;
+
     const bearerHeader = req.headers['authorization'];
-  
+
     if (typeof bearerHeader !== 'undefined') {
-      const bearer = bearerHeader.split(' ');
-      const bearerToken = bearer[1];
-  
-      try {
-        const decoded = jwt.verify(bearerToken, 'tu_secreto_secreto');
-        const { rol_id: userRolId } = decoded;
-  
-        if (userRolId !== 1) {
-          return res.status(403).json({ error: 'Acceso denegado' });
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+
+        try {
+            const decoded = jwt.verify(bearerToken, 'tu_secreto_secreto');
+            const { rol_id: userRolId } = decoded;
+
+            if (userRolId !== 1) {
+                return res.status(403).json({ error: 'Acceso denegado' });
+            }
+
+            console.log("ID:", id);
+            console.log("Cuerpo de la solicitud:", req.body);
+            console.log("Archivos:", req.files);
+            // Actualiza la información en la base de datos
+            await pool.query(
+                'UPDATE informacion SET rol_id = ?, url_imagen = ?, url_archivo = ?, titulo = ?, descripcion = ? WHERE id = ?',
+                [rol_id, url_imagen, url_archivo, titulo, descripcion, id]
+            );
+            console.log('Consulta SQL:', 'UPDATE informacion SET rol_id = ?, url_imagen = ?, url_archivo = ?, titulo = ?, descripcion = ? WHERE id = ?', [rol_id, url_imagen, url_archivo, titulo, descripcion, id]);
+
+
+            res.status(200).json({ message: 'Información actualizada exitosamente' });
+        } catch (err) {
+            next(err); // Manejo de errores
         }
-  
-        // Solo el rol_id igual a 1 puede actualizar datos en la tabla informacion
-        await pool.query(
-          'UPDATE informacion SET rol_id = ?, url_imagen = ?, url_archivo = ?, titulo = ?, descripcion = ? WHERE id = ?',
-          [rol_id, url_imagen, url_archivo, titulo, descripcion, id]
-        );
-  
-        res.status(200).json({ message: 'Información actualizada exitosamente' });
-      } catch (err) {
-        next(err); // Pasar el error al middleware de manejo centralizado
-      }
     } else {
-      res.sendStatus(403); // No se proporcionó el token de portador
+        res.sendStatus(403); // No se proporcionó el token de portador
     }
-  });
+});
+
 
   app.get('/usuarios', async (req, res, next) => {
     const bearerHeader = req.headers['authorization'];

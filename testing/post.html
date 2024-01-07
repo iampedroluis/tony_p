@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Safeview Upload</title>
+</head>
+<body>
+    <h1>Subida de Archivos Safeview</h1>
+    <form id="uploadForm">
+        <label for="rol_id">rol_id:</label>
+        <input type="text" id="rol_id" name="rol_id"><br><br>
+        
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required><br><br>
+
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcion" name="descripcion" required><br><br>
+
+        <label for="foto">Foto:</label>
+        <input type="file" id="foto" name="foto" accept="image/*"><br><br>
+
+        <label for="archivo">Archivo:</label>
+        <input type="file" id="archivo" name="archivo"><br><br>
+
+        <button type="submit">Subir</button>
+    </form>
+
+    <script src="script_post.js"></script>
+</body>
+</html>
