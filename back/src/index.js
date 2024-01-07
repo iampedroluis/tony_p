@@ -324,7 +324,7 @@ app.delete('/informacion/:id', async (req, res, next) => {
     // Obtiene las nuevas rutas de archivo, si se subieron archivos
     const url_imagen = req.files['imagen'] && req.files['imagen'].length > 0 ? req.files['imagen'][0].path : null;
     const url_archivo = req.files['archivo'] && req.files['archivo'].length > 0 ? req.files['archivo'][0].path : null;
-
+    
     const bearerHeader = req.headers['authorization'];
 
     if (typeof bearerHeader !== 'undefined') {
@@ -339,16 +339,23 @@ app.delete('/informacion/:id', async (req, res, next) => {
                 return res.status(403).json({ error: 'Acceso denegado' });
             }
 
-            console.log("ID:", id);
-            console.log("Cuerpo de la solicitud:", req.body);
-            console.log("Archivos:", req.files);
+            // Obtener las URLs existentes de la base de datos
+            const oldData = await pool.query('SELECT url_imagen, url_archivo FROM informacion WHERE id = ?', [id]);
+            if (oldData.length > 0) {
+                const oldUrlImagen = oldData[0][0].url_imagen;
+                const oldUrlArchivo = oldData[0][0].url_archivo;
+
+
+                // Eliminar los archivos del sistema de archivos si existen
+                if (oldUrlImagen) fs.unlinkSync(oldUrlImagen);
+                if (oldUrlArchivo) fs.unlinkSync(oldUrlArchivo);
+            }
+
             // Actualiza la información en la base de datos
             await pool.query(
                 'UPDATE informacion SET rol_id = ?, url_imagen = ?, url_archivo = ?, titulo = ?, descripcion = ? WHERE id = ?',
                 [rol_id, url_imagen, url_archivo, titulo, descripcion, id]
             );
-            console.log('Consulta SQL:', 'UPDATE informacion SET rol_id = ?, url_imagen = ?, url_archivo = ?, titulo = ?, descripcion = ? WHERE id = ?', [rol_id, url_imagen, url_archivo, titulo, descripcion, id]);
-
 
             res.status(200).json({ message: 'Información actualizada exitosamente' });
         } catch (err) {
