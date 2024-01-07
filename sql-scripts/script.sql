@@ -36,8 +36,8 @@ VALUES
 
 INSERT INTO informacion (rol_id, url_imagen, url_archivo, titulo, descripcion) 
 VALUES 
-    (1, 'url_imagen_1.jpg', 'url_archivo_1.pdf', 'Título 1', 'Descripción 1'),
-    (2, 'url_imagen_2.jpg', 'url_archivo_2.pdf', 'Título 2', 'Descripción 2'),
-    (3, 'url_imagen_3.jpg', 'url_archivo_3.pdf', 'Título 3', 'Descripción 3');
+    (1, 'imagenes/imagen_1.jpg', 'archivos/archivo_1.pdf', 'Título 1', 'Descripción 1'),
+    (2, 'imagenes/imagen_2.jpg', 'archivos/archivo_2.pdf', 'Título 2', 'Descripción 2'),
+    (3, 'imagenes/imagen_3.jpg', 'archivos/archivo_3.pdf', 'Título 3', 'Descripción 3');
 
 

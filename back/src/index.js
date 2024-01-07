@@ -31,8 +31,8 @@ const upload = multer({
     destination: function (req, file, cb) {
       let destinationPath;
 
-      if (file.fieldname === "foto") {
-        destinationPath = 'fotos/';
+      if (file.fieldname === "imagen") {
+        destinationPath = 'imagenes/';
       } else if (file.fieldname === "archivo") {
         destinationPath = 'archivos/';
       }
@@ -247,12 +247,12 @@ app.put('/roles/:id', async (req, res, next) => {
 
 app.post('/informacion', 
   upload.fields([
-    { name: 'foto', maxCount: 1 },
+    { name: 'imagen', maxCount: 1 },
     { name: 'archivo', maxCount: 1 }
   ]), 
   async (req, res, next) => {
     const { rol_id, titulo, descripcion } = req.body;
-    const url_imagen = req.files['foto'] && req.files['foto'].length > 0 ? req.files['foto'][0].path : null;
+    const url_imagen = req.files['imagen'] && req.files['imagen'].length > 0 ? req.files['imagen'][0].path : null;
     const url_archivo = req.files['archivo'] && req.files['archivo'].length > 0 ? req.files['archivo'][0].path : null;
 
 
@@ -314,7 +314,7 @@ app.delete('/informacion/:id', async (req, res, next) => {
 
   app.put('/informacion/:id', 
   upload.fields([
-    { name: 'foto', maxCount: 1 },
+    { name: 'imagen', maxCount: 1 },
     { name: 'archivo', maxCount: 1 }
   ]), 
   async (req, res, next) => {
@@ -322,7 +322,7 @@ app.delete('/informacion/:id', async (req, res, next) => {
     const { rol_id, titulo, descripcion } = req.body;
 
     // Obtiene las nuevas rutas de archivo, si se subieron archivos
-    const url_imagen = req.files['foto'] && req.files['foto'].length > 0 ? req.files['foto'][0].path : null;
+    const url_imagen = req.files['imagen'] && req.files['imagen'].length > 0 ? req.files['imagen'][0].path : null;
     const url_archivo = req.files['archivo'] && req.files['archivo'].length > 0 ? req.files['archivo'][0].path : null;
 
     const bearerHeader = req.headers['authorization'];

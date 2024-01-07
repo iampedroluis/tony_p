@@ -38,7 +38,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
     formData.append('rol_id', document.getElementById('rol_id').value);
     formData.append('titulo', document.getElementById('titulo').value);
     formData.append('descripcion', document.getElementById('descripcion').value);
-    formData.append('foto', document.getElementById('foto').files[0]);
+    formData.append('imagen', document.getElementById('imagen').files[0]);
     formData.append('archivo', document.getElementById('archivo').files[0]);
 
     // Suponiendo que tienes un ID para actualizar
