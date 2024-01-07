@@ -412,11 +412,6 @@ app.put('/informacion/:id', async (req, res, next) => {
 
   app.post('/usuarios', async (req, res, next) => {
     const { nombre, apellido, email, password, rol_id: nuevoRolId } = req.body; // Usar rol_id como nuevoRolId
-    const bearerHeader = req.headers['authorization'];
-  
-    if (typeof bearerHeader !== 'undefined') {
-      const bearer = bearerHeader.split(' ');
-      const bearerToken = bearer[1];
   
       try {  
         // Verificar si el correo ya existe en algún usuario
@@ -439,10 +434,8 @@ app.put('/informacion/:id', async (req, res, next) => {
       } catch (err) {
         next(err); // Pasar el error al middleware de manejo centralizado
       }
-    } else {
-      res.sendStatus(403); // No se proporcionó el token de portador
-    }
-  });
+
+    });
   
 
 app.listen(3000)
