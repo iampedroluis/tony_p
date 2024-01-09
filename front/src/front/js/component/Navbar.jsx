@@ -50,13 +50,16 @@ const homeNavbar = (    <nav className="navbar navbar-expand-lg navbar-light bg-
               Registrarse
             </Link>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link text-white font-extralight" to="/">
-              Iniciar sesión
-            </Link>
-          </li>
+       
         </>
-      )}
+      )}  
+      {location.pathname == '/registro' &&(
+        <li className="nav-item">
+        <Link className="nav-link text-white font-extralight" to="/">
+          Iniciar sesión
+        </Link>
+      </li>)} 
+   
       <li className="nav-item d-flex align-items-center">
         {/* Cambiar entre íconos de sol y luna según el modo actual */}
         <button className="bg-transparent border-0" onClick={toggleDarkMode}>
@@ -164,6 +167,8 @@ const userNavbar = (    <nav className="navbar navbar-expand-lg navbar-light bg-
   return (
     <>
     {store.user_role_id === 0 && homeNavbar}
+    {console.log(store.user_role_id)}
+    {console.log("pathname:", location.pathname)}
     {store.user_role_id === 1 && adminNavbar}
     {store.user_role_id !== 1 &&  store.user_role_id !== 0 && userNavbar}
   </>

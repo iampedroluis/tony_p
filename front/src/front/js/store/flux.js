@@ -11,11 +11,31 @@ const getState = ({ getStore, getActions, setStore }) => {
         token: localStorage.getItem('userToken'),
         posts:[]
         
+        
       },
   
       actions: {
         createUser: async(jsonBody)=>{
-          console.log(jsonBody)
+          const url = `${backendUrl}/usuarios`
+          const options = {
+            method: 'POST',
+            body: JSON.stringify(jsonBody),
+            headers:{
+              'Content-Type': 'application/json'
+            }
+          }
+          try {
+            const resp = await fetch(url, options)
+            if(resp.ok){
+              const data = await resp.json();
+              return data
+            }else{
+              return {message: "No se ha podido crear el usuario"}
+            }
+          } catch (error) {
+            console.error(error);
+            return {success: false , message : "Error en red"};
+          }
         },
         login: async (jsonBody) => {
           const url = `${backendUrl}/login`;

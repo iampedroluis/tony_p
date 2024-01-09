@@ -1,10 +1,13 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import Postimg from "../../img/posts-img.png";
+import {Link, useNavigate, useLocation} from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 export const Registro = () => {
     const { store, actions } = useContext(Context);
     const [registroError , setRegistroError] = useState(null)
+    const navigate = useNavigate()
     const [errMsg, setErrMsg] = useState("")
     const [formData, setFormData] = useState({
         nombre: "",
@@ -14,6 +17,15 @@ export const Registro = () => {
         confirmPassword: "",
         rol_id: "" // Nuevo campo para el rol_id
     });
+    const [editUser, setEditUser] = useState({
+        rol_id: "" // Asegúrate de que esto esté definido correctamente
+      });
+      const roles = [
+        { id: 2, label: "Maestro" },
+        { id: 3, label: "Alumno" },
+        { id: 4, label: "Padre" }
+        // Agrega más roles según tus necesidades
+      ];
 
     const handleChange = (e) => {
         setFormData({
@@ -36,52 +48,67 @@ export const Registro = () => {
         });
     };
     const validateEmail = (email) => {
-        // Puedes usar una expresión regular para validar el formato del correo electrónico
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Expresión regular actualizada para requerir al menos dos caracteres después del último punto
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
         return regex.test(email);
     };
 
-    const handleSubmit = () => {
+
+    const handleSubmit =async () => {
         // Validación de campos vacíos
         for (const key in formData) {
-            if (formData[key] === "") {
-                if (key === "rol_id") {
-                    setRegistroError(true);
-                    setErrMsg("El campo Registrar como no puede estar vacío.");
-                } else {
-                    setRegistroError(true);
-                    setErrMsg(`El campo ${key} no puede estar vacío.`);
-                }
-                return;
-            }
-        }
-        if (!validateEmail(formData.email)) {
+          if (formData[key] === "") {
             setRegistroError(true);
-            setErrMsg("Por favor, introduce un correo electrónico válido.");
+            setErrMsg(`El campo ${key} no puede estar vacío.`);
             return;
+          }
         }
+      
         // Validación de contraseñas iguales
         if (formData.password !== formData.confirmPassword) {
-            setRegistroError(true);
-            setErrMsg("Las contraseñas no coinciden.");
-            return;
+          setRegistroError(true);
+          setErrMsg("Las contraseñas no coinciden.");
+          return;
         }
-
+      
+        // Validación de correo electrónico
+        if (formData.email !== "" && !validateEmail(formData.email)) {
+          setRegistroError(true);
+          setErrMsg("Por favor, introduce un correo electrónico válido.");
+          return;
+        }
+        const dataToSend = { ...formData };
+        delete dataToSend.confirmPassword;
         // Enviar datos al backend o realizar acciones necesarias
-        actions.createUser(formData);
-
+        const result = await actions.createUser(dataToSend);
+        if(result.message === "Usuario creado exitosamente"){
+            setRegistroError(false);
+                setErrMsg(result.message);
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: result.message,
+                    showConfirmButton: false,
+                    timer: 2500
+                  });
+        navigate('/')
+        }else{
+            setRegistroError(true);
+            setErrMsg(result.message);
+        }
         // Limpiar el formulario después del registro exitoso
         setFormData({
-            nombre: "",
-            apellido: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            rol_id: ""
+          nombre: "",
+          apellido: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          rol_id: ""
         });
-        setRegistroError(false);
-        setErrMsg("Registro exitoso");
-    };
+      
+        
+      };
+      
 
     return (
         <div className="container h-screen mt-5 ">
@@ -137,50 +164,29 @@ export const Registro = () => {
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
                             />
-                            <div className="my-3">
-                                <h6 className="text-dark text-cente ms-1">Registrar como: </h6>
-                                <div className="d-flex justify-content-around my-3">
-                                    <div className="form-check form-check-inline ">
-                                        <label className="form-check-label text-dark " htmlFor="maestro">
-                                            Maestro
-                                        </label>
-                                        <input
-                                            className="form-check-input mt-1"
-                                            type="radio"
-                                            name="role"
-                                            id="maestro"
-                                            value="maestro"
-                                            onChange={handleRadioChange}
-                                        />
-                                    </div>
-                                    <div className="form-check form-check-inline">
-                                        <label className="form-check-label text-dark me-2" htmlFor="alumno">
-                                            Alumno
-                                        </label>
-                                        <input
-                                            className="form-check-input mt-1"
-                                            type="radio"
-                                            name="role"
-                                            id="alumno"
-                                            value="alumno"
-                                            onChange={handleRadioChange}
-                                        />
-                                    </div>
-                                    <div className="form-check form-check-inline justify-content-end">
-                                        <label className="form-check-label text-dark me-2" htmlFor="padre">
-                                            Padre
-                                        </label>
-                                        <input
-                                            className="form-check-input mt-1"
-                                            type="radio"
-                                            name="role"
-                                            id="padre"
-                                            value="padre"
-                                            onChange={handleRadioChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+                              <div className="mb-3 text-start">
+                    <label htmlFor="rol" className="form-label text-dark-black">
+                        Rol
+                    </label>
+                    <select
+                        className="form-select"
+                        id="rol"
+                        value={formData.rol_id}
+                        onChange={(e) => handleChange(e)}
+                        name="rol_id"
+                    >
+                        <option value="" disabled selected>
+                            Seleccionar Rol
+                        </option>
+                        {roles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                                {role.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+         
                             <div className="text-center">
                                 <button type="button" className="btn btn-outline-dark" onClick={handleSubmit}>
                                     Registrar
