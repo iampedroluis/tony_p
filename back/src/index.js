@@ -376,6 +376,35 @@ app.delete('/informacion/:id', async (req, res, next) => {
     }
   });
   
+  app.get('/usuarios/:id', async (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+
+    if (typeof bearerHeader !== 'undefined') {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+
+        try {
+            const decoded = jwt.verify(bearerToken, 'tu_secreto_secreto');
+
+            // Capturando el id del parámetro de ruta
+            const userId = req.params.id;
+
+            // Consulta para obtener los datos del usuario específico
+            const result = await pool.query('SELECT id, nombre, apellido, email, rol_id FROM usuarios WHERE id = ?', [userId]);
+
+            // Verificar si se encontró el usuario
+            if (result[0].length === 0) {
+                return res.status(404).json({ error: 'Usuario no encontrado' });
+            }
+
+            res.status(200).json(result[0][0]);
+        } catch (err) {
+            next(err); // Pasar el error al middleware de manejo centralizado
+        }
+    } else {
+        res.sendStatus(403); // No se proporcionó el token de portador
+    }
+});
 
   app.delete('/usuarios/:id', async (req, res, next) => {
     const { id } = req.params;
