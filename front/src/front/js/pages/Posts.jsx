@@ -12,16 +12,22 @@ useEffect(() => {
   const fetchData = async () => {
     // Llama a la acción para obtener los posts
     const result = await actions.getPosts();
-
+    
     // Si la llamada fue exitosa, actualiza el estado posts
     if (result.success) {
       setPosts(store.posts);
+
     }
+
+
+    
   };
 
   // Llama a fetchData cuando el componente se monta
   fetchData();
-}, [store.posts]);
+  
+ // actions.getUsuario()
+}, []);
 
 
   useEffect(() => {

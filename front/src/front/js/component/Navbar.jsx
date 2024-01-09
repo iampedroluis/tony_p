@@ -10,12 +10,12 @@ export const Navbar = () => {
     // Inicializa el estado con el valor almacenado en localStorage o false por defecto
     return localStorage.getItem("darkMode") === "true" ? true : false;
   });
-
+  const[rol, setRol]=useState(0)
   useEffect(() => {
     // Actualiza el valor en localStorage cada vez que cambia el estado
     localStorage.setItem("darkMode", darkMode);
     document.body.classList.toggle('dark', darkMode);
-
+      setRol(store.user_role_id)
   }, [darkMode, store.user_role_id]);
 
   const toggleDarkMode = () => {
@@ -166,11 +166,9 @@ const userNavbar = (    <nav className="navbar navbar-expand-lg navbar-light bg-
 
   return (
     <>
-    {store.user_role_id === 0 && homeNavbar}
-    {console.log(store.user_role_id)}
-    {console.log("pathname:", location.pathname)}
-    {store.user_role_id === 1 && adminNavbar}
-    {store.user_role_id !== 1 &&  store.user_role_id !== 0 && userNavbar}
+    {rol === "0" && homeNavbar}
+    {rol === "1" && adminNavbar}
+    {rol!== "1" &&  rol !== "0" && userNavbar}
   </>
   );
 };

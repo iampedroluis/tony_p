@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import Postimg from "../../img/posts-img.png";
+import Swal from 'sweetalert2'
 
 export const Home = () => {
     const { store, actions } = useContext(Context);
@@ -71,7 +72,13 @@ export const Home = () => {
             navigate('/posts');
         }
     }, [errMsg]);
-
+const handleForwotPass = () =>{
+    Swal.fire({
+        title: "¿Olvidaste la contraseña?",
+        text: "Envia un E-mail a soporte@nexconnect.com con tus datos para reestrablecer tu contraseña",
+        icon: "question"
+      });
+}
     return (
         <div className="container h-screen mt-5 mb-11" >
             <div className="row">
@@ -115,6 +122,9 @@ export const Home = () => {
                 ) : (<div>
 
                 </div>)}
+                <div className="container d-flex justify-center mt-4"> 
+                    <button className="bg-transparent" onClick={handleForwotPass}> Olvide mi contraseña</button>
+                </div>
                             </div>
                         </div>
                     </div>
