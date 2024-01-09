@@ -484,6 +484,13 @@ app.delete('/informacion/:id', async (req, res, next) => {
 
     });
   
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const __prevDirname = path.join(__dirname, '..');
+
+    app.use('/imagenes', express.static(path.join(__prevDirname, 'imagenes')));
+    app.use('/archivos', express.static(path.join(__prevDirname, 'archivos')));
+
 
 app.listen(3000)
 console.log('Server on port', 3000)
