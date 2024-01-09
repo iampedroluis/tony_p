@@ -131,30 +131,14 @@ app.post('/login', async (req, res) => {
   });
 
   app.get('/roles', async (req, res, next) => {
-  const bearerHeader = req.headers['authorization'];
-
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
-    const bearerToken = bearer[1];
-
     try {
-      const decoded = jwt.verify(bearerToken, 'tu_secreto_secreto');
-      const { rol_id } = decoded;
-
-      if (rol_id !== 1) {
-        return res.status(403).json({ error: 'Acceso denegado' });
-      }
-
       const roles = await pool.query('SELECT * FROM roles');
       res.status(200).json(roles[0]);
     } catch (err) {
       next(err); // Pasar el error al middleware de manejo centralizado
     }
-  } else {
-    res.sendStatus(403); // No se proporcionó el token de portador
-  }
-});
-
+  });
+  
 app.post('/roles', async (req, res, next) => {
   const { rol } = req.body;
   const bearerHeader = req.headers['authorization'];
