@@ -7,7 +7,7 @@ export const Posts = () => {
   const [loadedImages, setLoadedImages] = useState(0);
   const [expandedDescription, setExpandedDescription] = useState([]);
   const [posts, setPosts] = useState([])
-
+  const [user, setUser] = useState(null)
 useEffect(() => {
   const fetchData = async () => {
     // Llama a la acción para obtener los posts
@@ -16,18 +16,18 @@ useEffect(() => {
     // Si la llamada fue exitosa, actualiza el estado posts
     if (result.success) {
       setPosts(store.posts);
-
+      
     }
-
+  
 
     
   };
 
   // Llama a fetchData cuando el componente se monta
   fetchData();
-  
- // actions.getUsuario()
-}, []);
+  setUser(store.user)
+  console.log(store.user)
+}, [store.user]);
 
 
   useEffect(() => {
@@ -49,7 +49,7 @@ useEffect(() => {
   }, []); // Se ejecuta solo una vez al montar el componente
 
   const openPDF = (pdfURL) => {
-    window.open(pdfURL, '_blank');
+    window.open("http://localhost:3000/"+pdfURL, '_blank');
   };
   const toggleDescriptionExpand = (index) => {
     setExpandedDescription((prevIndexes) => {
@@ -59,11 +59,12 @@ useEffect(() => {
     });
   };
 
+
   return (
     <div className="container mb-5 mt-5 d-flex flex-column align-items-center justify-content-center">
       <div className="col-12 mb-3 text-start">
         <h2 className="text-3xl md:text-6xl font-bold text-dark-black dark:text-principal-white big-text">
-          Hola Fulano 👋
+          Hola {store.user} 👋
         </h2>
       </div>
       {posts.map((post, index) => (

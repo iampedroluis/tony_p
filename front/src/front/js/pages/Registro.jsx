@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import Postimg from "../../img/posts-img.png";
 import {Link, useNavigate, useLocation} from 'react-router-dom'
@@ -20,13 +20,18 @@ export const Registro = () => {
     const [editUser, setEditUser] = useState({
         rol_id: "" // Asegúrate de que esto esté definido correctamente
       });
-      const roles = [
-        { id: 2, label: "Maestro" },
-        { id: 3, label: "Alumno" },
-        { id: 4, label: "Padre" }
-        // Agrega más roles según tus necesidades
-      ];
+      const[roles , setRoles] = useState([])
+useEffect(()=>{
 
+const fetchRoles =async ()=>{
+    const resp = await actions.getRoles()
+    if(resp.success){
+        setRoles(store.roles)
+        console.log(roles)
+    }
+}
+fetchRoles()
+},[])
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -178,9 +183,11 @@ export const Registro = () => {
                         <option value="" disabled selected>
                             Seleccionar Rol
                         </option>
-                        {roles.map((role) => (
+                        {roles
+                        .filter((role) => role.rol.toLowerCase() !== 'admin')  // Filtra los roles que no sean 'admin'
+                        .map((role) => (
                             <option key={role.id} value={role.id}>
-                                {role.label}
+                                {role.rol}
                             </option>
                         ))}
                     </select>

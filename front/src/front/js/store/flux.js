@@ -11,7 +11,8 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
         token: localStorage.getItem('userToken'),
         posts:[],
         user_id : null,
-        user:null
+        user:localStorage.getItem('user') ??  "usuario",
+        roles: []
         
         
       },
@@ -64,7 +65,7 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
                   let rol_id = decode.rol_id
                   localStorage.setItem("rol", rol_id)
                   await setStore({user_role_id: String(rol_id)})
-                  
+                  await getActions().getUsuario();
                   
                   return { success: true };
 
@@ -81,8 +82,11 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
       logout:()=> {
         localStorage.removeItem('userToken')
         localStorage.removeItem('rol')
+        localStorage.removeItem('user')
         setStore({token:null})
         setStore({user_role_id:"0"})
+        setStore({user: "usuario"})
+        
         
       },
 
@@ -142,8 +146,9 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
             return { success: false, error: "Error de red" };
         }
         },
-        /*
+        
         getUsuario: async ()=>{
+          console.log("entre al getUsuario")
           const { token } = getStore()
           let decode = jwtDecode(token);
           let user_id = decode.id
@@ -162,8 +167,8 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
               const resp = await fetch(url, options);
               if (resp.ok) {
                   const data = await resp.json();
-                  setStore({user: data})
-                  localStorage.setItem('user', data)
+                  setStore({user: data.nombre})
+                  localStorage.setItem('user', data.nombre)
                   return { success: true };
 
               } else {
@@ -175,8 +180,36 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
               console.error(error);
               return { success: false, error: "Error de red" };
           }
+        },
+        getRoles: async ()=>{
+          
+          const url = `${backendUrl}/roles`;
+          const options = {
+              method: "GET",
+              
+              headers: {
+                  "Content-Type": "application/json"
+              }
+          };
+      
+          try {
+              const resp = await fetch(url, options);
+              if (resp.ok) {
+                  const data = await resp.json();
+                  setStore({roles: data})
+                  return { success: true };
+
+              } else {
+                  const errorData = await resp.json();
+                  console.log(errorData)
+                  return { success: false, error: errorData.error};
+              }
+          } catch (error) {
+              console.error(error);
+              return { success: false, error: "Error de red" };
+          }
         }
-        */
+        
       },
     };
   };
