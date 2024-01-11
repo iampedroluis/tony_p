@@ -38,7 +38,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
     formData.append('descripcion', document.getElementById('descripcion').value);
     formData.append('imagen', document.getElementById('imagen').files[0]);
     formData.append('archivo', document.getElementById('archivo').files[0]);
-
+    console.log(formData)
     try {
         const response = await fetch('http://localhost:3000/informacion', {
             method: 'POST',

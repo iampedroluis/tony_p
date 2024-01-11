@@ -1,21 +1,21 @@
 import { document } from "postcss";
-import React, { useContext, useState } from "react";
-import {Link, useNavigate, useLocation} from 'react-router-dom'
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Context } from "../store/appContext";
 import Swal from 'sweetalert2';
 
 
 
 export const CreatePost = () => {
-    const { store, actions } = useContext(Context);
-    
-    const location = useLocation()
+  const { store, actions } = useContext(Context);
+  const [roles, setRoles] = useState([])
+  const location = useLocation()
   const [formData, setFormData] = useState({
+    rol_id: "",
     titulo: "",
     descripcion: "",
     imagen: "",
-    pdf: "",
-    postear_a: "",
+    archivo: ""
   });
 
   const handleInputChange = (e) => {
@@ -45,48 +45,55 @@ export const CreatePost = () => {
       return;
     }
     if (name === "pdf" && selectedFile.type.startsWith("image/")) {
-        Swal.fire({
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 1500,
-            icon: 'error',
-            title: 'Error al subir archivo',
-            text: 'Por favor, seleccione un archivo texto válido.',
-            customClass: "swal-small"
-          });
-          // Limpiar el campo de pdf
-          e.target.value = null;
-          return;
-        }
-    
+      Swal.fire({
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1500,
+        icon: 'error',
+        title: 'Error al subir archivo',
+        text: 'Por favor, seleccione un archivo texto válido.',
+        customClass: "swal-small"
+      });
+      // Limpiar el campo de pdf
+      e.target.value = null;
+      return;
+    }
+
     setFormData({
       ...formData,
       [name]: selectedFile,
     });
   };
-
-  const handleDropdownChange = (value) => {
+  const handleDropdownChange = (e) => {
+    const value = e.target.options[e.target.selectedIndex].value;
     setFormData({
       ...formData,
-      postear_a: value,
+      rol_id: value,
     });
+    console.log(value);
   };
 
   const handleLimpiar = () => {
     setFormData({
+      rol_id: "",
       titulo: "",
       descripcion: "",
       imagen: "",
-      pdf: "",
-      postear_a: "",
+      archivo: ""
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
     // Aquí puedes enviar los datos al backend o realizar las acciones necesarias
-    console.log("Datos del formulario:", formData);
-    Swal.fire({
+    const resp = await actions.createPost(formDataToSend);
+    console.log(formDataToSend)
+    if (resp.succes) {
+      Swal.fire({
         position: "top-end",
         showConfirmButton: false,
         timer: 1500,
@@ -95,16 +102,25 @@ export const CreatePost = () => {
         text: 'El Post fue creado exitosamente',
         customClass: "swal-small"
       });
-    // Restablecer el formulario después de enviar los datos
-    handleLimpiar();
-    setTimeout( () => {
-        window.location.reload();
-      }, 2000);
-    
- 
-    
+      handleLimpiar();
+    }
+
+
+
+
   };
 
+  useEffect(() => {
+
+    const fetchRoles = async () => {
+      const resp = await actions.getRoles()
+      if (resp.success) {
+        setRoles(store.roles)
+        console.log(roles)
+      }
+    }
+    fetchRoles()
+  }, [])
   return (
     <div className="container mb-5 mt-5">
       <div className="row">
@@ -155,73 +171,46 @@ export const CreatePost = () => {
                 id="imagen"
                 name="imagen"
                 onChange={handleFileChange}
-                
+
               />
             </div>
             <div className="mb-3 ">
-              <label htmlFor="pdf" className="form-label text-dark-black font-bold dark:text-principal-white ">
+              <label htmlFor="archivo" className="form-label text-dark-black font-bold dark:text-principal-white ">
                 Añadir PDF:
               </label>
               <input
                 className="form-control "
                 type="file"
-                id="pdf"
-                name="pdf"
+                id="archivo"
+                name="archivo"
                 onChange={handleFileChange}
               />
             </div>
             <div className="mb-3 d-flex  justify-between ">
-              <label htmlFor="postear_a" className="form-label text-dark-black font-bold dark:text-principal-white ">
+              <label htmlFor="rol_id" className="form-label text-dark-black font-bold dark:text-principal-white ">
                 Postear a:
               </label>
-              <div className="dropdown">
-                <button
-                  className="btn text-principal-white bg-dark-black border-dark-black hover:text-dark-black hover:border-dark-black dark:bg-principal-white dark:text-dark-black"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+              <div className="dropdown"><label htmlFor="rol" className="form-label text-dark-black">
+                Rol
+              </label>
+                <select
+                  className="form-select"
+                  id="rol"
+                  value={formData.rol_id}
+                  onChange={handleDropdownChange} // Cambiado para pasar directamente la función
+                  name="rol_id"
                 >
-                  {formData.postear_a ? formData.postear_a : "Seleccionar"}
-                </button>
-                <ul className="dropdown-menu mt-2 bg-principal-white">
-                  <li>
-                    <button
-                      className="dropdown-item font-light text-dark"
-                      type="button"
-                      onClick={() => handleDropdownChange("Maestros")}
-                    >
-                      Maestros
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="dropdown-item font-light text-dark"
-                      type="button"
-                      onClick={() => handleDropdownChange("Estudiantes")}
-                    >
-                      Estudiantes
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="dropdown-item font-light text-dark"
-                      type="button"
-                      onClick={() => handleDropdownChange("Padres")}
-                    >
-                      Padres
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="dropdown-item font-light text-dark"
-                      type="button"
-                      onClick={() => handleDropdownChange("Todos")}
-                    >
-                      Todos
-                    </button>
-                  </li>
-                </ul>
-              </div>
+                  <option value="" disabled selected>
+                    Seleccionar Rol
+                  </option>
+                  {roles
+                    .filter((role) => role.rol.toLowerCase() !== 'admin')
+                    .map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.rol}
+                      </option>
+                    ))}
+                </select></div>
             </div>
             <div className="mb-3 mt-5 d-flex justify-content-end">
               <button

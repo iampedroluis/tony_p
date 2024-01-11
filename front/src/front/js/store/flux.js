@@ -208,8 +208,36 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
               console.error(error);
               return { success: false, error: "Error de red" };
           }
+        },
+        createPost: async (jsonBody)=>{
+          const url = `${backendUrl}/informacion`;
+          const { token } = getStore();
+          const options = {
+              method: "POST",
+              body: jsonBody,
+              headers: {
+                
+                  "Authorization": 'Bearer ' + token
+              }
+          };
+      
+          try {
+              const resp = await fetch(url, options);
+              if (resp.status === 201) {
+                  const data = await resp.json(); 
+                  return { success: true, message :  "Post Creado exitosamente" };
+
+              } else {
+                  const errorData = await resp.json();
+                  console.log(errorData)
+                  return { success: false, error: errorData.error || "Error al Crear el Post" };
+              }
+          } catch (error) {
+              console.error(error);
+              return { success: false, error: "Error de red" };
+          }
         }
-        
+
       },
     };
   };
