@@ -13,10 +13,9 @@ export const Posts = () => {
   const [roles, setRoles] = useState([])
   const [showModal, setShowModal] = useState(false);
   const [editPost, setEditPost] = useState({ titulo: "", descripcion: "", rol_id: "", originalPost: {} });
-
+  const [postToDeleteId, setPostToDeleteId] = useState(null);
   const [selectedPostId, setSelectedPostId] = useState(null);
-  const [nameImage, setNameImage] = useState(null)
-  const [archivoName, setArchivoName] = useState(null)
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +84,7 @@ export const Posts = () => {
 
   const handleEdit = (post) => {
     console.log(post);
-
+    setPostToDeleteId(post.id);
     // Verificar y asignar un valor predeterminado si es null
 
     setEditPost({
@@ -208,6 +207,41 @@ export const Posts = () => {
   useEffect(() => {
     console.log(editPost);
   }, [editPost]);
+
+const handleDelete = async (post) =>{
+  
+  try {
+    const resp = await actions.deletePost(postToDeleteId)
+    if (resp.success) {
+      Swal.fire({
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1500,
+        icon: 'success',
+        title: 'Post Eliminado',
+        text: 'El Post fue ELiminado exitosamente',
+        customClass: "swal-small"
+      });
+    }
+    const fetchData = async () => {
+      // Llama a la acción para obtener los posts
+      const result = await actions.getPosts();
+
+      // Si la llamada fue exitosa, actualiza el estado posts
+      if (result.success) {
+        setPosts(store.posts);
+      }
+    };
+
+    // Llama a fetchData cuando el componente se monta
+    fetchData();
+  } catch (error) {
+    console.error(error)
+  }finally{
+    handleCloseModal()
+  }
+ 
+}
 
 
   return (
@@ -343,32 +377,32 @@ export const Posts = () => {
                     
 
                   </div>
-                  <div className="mb-3 d-flex  justify-between ">
-                    <label htmlFor="rol_id" className="form-label text-dark-black font-bold dark:text-principal-white ">
-                      Postear a:
-                    </label>
-                    <div className="dropdown"><label htmlFor="rol" className="form-label text-dark-black">
-                      Rol
-                    </label>
-                      <select
-                        className="form-select"
-                        id="rol"
-                        value={editPost.rol_id}
-                        onChange={handleDropdownChange} // Cambiado para pasar directamente la función
-                        name="rol_id"
-                      >
-                        <option value="" disabled selected>
-                          Seleccionar Rol
-                        </option>
-                        {roles
-                          .filter((role) => role.rol.toLowerCase() !== 'admin')
-                          .map((role) => (
-                            <option key={role.id} value={role.id}>
-                              {role.rol}
-                            </option>
-                          ))}
-                      </select></div>
-                  </div>
+                  <div className="mb-3 d-flex justify-between align-items-center">
+  <label htmlFor="rol_id" className="form-label mt-4 text-dark-black font-bold dark:text-principal-white">
+    Postear a:
+  </label>
+  <div className="dropdown">
+    <label htmlFor="rol" className="form-label text-dark-black"></label>
+    <select
+      className="form-select align-middle w-100"
+      id="rol"
+      value={editPost.rol_id}
+      onChange={handleDropdownChange}
+      name="rol_id"
+    >
+      <option value="" disabled selected>
+        Seleccionar Rol
+      </option>
+      {roles
+        .filter((role) => role.rol.toLowerCase() !== 'admin')
+        .map((role) => (
+          <option key={role.id} value={role.id}>
+            {role.rol}
+          </option>
+        ))}
+    </select>
+  </div>
+</div>
                   <div className="mb-3 mt-5 d-flex justify-content-end">
 
                   </div>
@@ -383,6 +417,9 @@ export const Posts = () => {
           </Button>
           <Button variant="primary" onClick={handleSaveChanges}>
             Guardar Cambios
+          </Button>
+          <Button className="bg-red-500 text-principal-white hover:bg-red-900" onClick={handleDelete}>
+            Eliminar Post
           </Button>
         </Modal.Footer>
       </Modal>

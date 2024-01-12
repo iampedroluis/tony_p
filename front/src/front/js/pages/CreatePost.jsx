@@ -92,7 +92,7 @@ export const CreatePost = () => {
     // Aquí puedes enviar los datos al backend o realizar las acciones necesarias
     const resp = await actions.createPost(formDataToSend);
     console.log(formDataToSend)
-    if (resp.succes) {
+    if (resp.success) {
       Swal.fire({
         position: "top-end",
         showConfirmButton: false,

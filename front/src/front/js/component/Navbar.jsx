@@ -2,6 +2,10 @@ import React, { useContext, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Context } from "../store/appContext";
 import nblanco from "../../img/nblanco.png";
+import { Button, Modal } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Swal from 'sweetalert2';
+
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -11,12 +15,15 @@ export const Navbar = () => {
     return localStorage.getItem("darkMode") === "true" ? true : false;
   });
   const[rol, setRol]=useState(0)
+  const [showModal, setShowModal] = useState(false);
+  const [crearRol, setCrearRol] = useState({ rol: "" });
+
   useEffect(() => {
     // Actualiza el valor en localStorage cada vez que cambia el estado
     localStorage.setItem("darkMode", darkMode);
     document.body.classList.toggle('dark', darkMode);
       setRol(store.user_role_id)
-  }, [darkMode, store.user_role_id]);
+  }, [darkMode, store.user_role_id, store.roles]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -24,6 +31,47 @@ export const Navbar = () => {
   const handleLogout = ()=>{
     actions.logout()
   }
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleEdit = () => {
+    setCrearRol({ rol: "" }); // Aquí puedes inicializar el estado con valores predeterminados si es necesario
+    setShowModal(true);
+  };
+
+
+ const handleSaveChanges = async () => {
+    try {
+      // Llama a la acción para crear el rol
+      const result = await actions.createRol(crearRol);
+
+      // Verifica si la creación fue exitosa
+      if (result.success) {
+        
+        Swal.fire({
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 1500,
+          icon: 'success',
+          title: 'Rol Creado',
+          text: 'El Rol fue creado exitosamente',
+          customClass: "swal-small"
+        });
+        actions.getRoles()
+        // Puedes agregar aquí lógica adicional si es necesario
+
+      } else {
+        console.error("Error al crear el rol");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      handleCloseModal();
+    }
+  };
+
+
 
 const homeNavbar = (    <nav className="navbar navbar-expand-lg navbar-light bg-primary">
 <div className="container mx-5">
@@ -105,7 +153,11 @@ const adminNavbar = (    <nav className="navbar navbar-expand-lg navbar-light bg
               Admin
             </Link>
           </li>
-      
+          <li className="nav-item">
+            <Link className="nav-link text-white font-extralight" onClick={handleEdit}>
+              Crear Roles
+            </Link>
+          </li>
      
       <li className="nav-item d-flex align-items-center">
         {/* Cambiar entre íconos de sol y luna según el modo actual */}
@@ -123,6 +175,45 @@ const adminNavbar = (    <nav className="navbar navbar-expand-lg navbar-light bg
     </ul>
   </div>
 </div>
+<Modal show={showModal} onHide={handleCloseModal} className="text-center">
+        <Modal.Header className="dark:bg-dark-black" closeButton>
+          <Modal.Title className="dark:bg-dark-black">Crear Rol</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="dark:bg-dark-black">
+          {/* Formulario para Crear Roles */}
+          {crearRol && (
+            <form onSubmit={handleSaveChanges} className="">
+              <div className="container dark:bg-dark-black dark:border-dark-black mt-4 rounded-2xl border-5  shadow-2xl border-[#F9FCFD] bg-[#F9FCFD] p-5 ">
+                <div className="container  whitespace-normal md:whitespace-pre">
+                  <div className="mb-3">
+                    <label htmlFor="rol" className="form-label text-dark-black font-bold dark:text-principal-white ">
+                      Nombre del Rol:
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="rol"
+                      name="rol"
+                      placeholder="Ingrese el Nombre del Rol"
+                      value={crearRol.rol}
+                      onChange={(e) => setCrearRol({ ...crearRol, rol: e.target.value })}
+                    />
+                  </div>
+
+                </div>
+              </div>
+            </form>
+          )}
+        </Modal.Body>
+        <Modal.Footer className="dark:bg-dark-black">
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cerrar
+          </Button>
+          <Button variant="primary" onClick={handleSaveChanges}>
+            Crear Rol
+          </Button>
+        </Modal.Footer>
+      </Modal>
 </nav>)
 
 const userNavbar = (    <nav className="navbar navbar-expand-lg navbar-light bg-primary">
