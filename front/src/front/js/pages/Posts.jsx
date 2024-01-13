@@ -311,7 +311,7 @@ const handleDelete = async (post) =>{
           {/* Formulario para editar el usuario */}
           {editPost && (
             <form onSubmit={handleSaveChanges} className="">
-              <div className="container dark:bg-dark-black dark:border-dark-black mt-4 rounded-2xl border-5  shadow-2xl border-[#F9FCFD] bg-[#F9FCFD] p-5 ">
+              <div className="container dark:bg-dark-black dark:border-dark-black mt-4 ">
                 <div className="container  whitespace-normal md:whitespace-pre">
                   <div className="mb-3">
                     <label htmlFor="titulo" className="form-label text-dark-black font-bold dark:text-principal-white ">
