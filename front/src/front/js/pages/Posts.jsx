@@ -211,6 +211,16 @@ export const Posts = () => {
 const handleDelete = async (post) =>{
   
   try {
+    const confirmation = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esto',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminarlo'
+  });
+  if (confirmation.isConfirmed) {
     const resp = await actions.deletePost(postToDeleteId)
     if (resp.success) {
       Swal.fire({
@@ -235,6 +245,7 @@ const handleDelete = async (post) =>{
 
     // Llama a fetchData cuando el componente se monta
     fetchData();
+  }
   } catch (error) {
     console.error(error)
   }finally{
