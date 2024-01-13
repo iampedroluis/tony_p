@@ -323,6 +323,63 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
               console.error(error);
               return { success: false, error: "Error de red" };
           }
+        },
+        editRol : async(jsonBody, idRol) =>{
+          const url = `${backendUrl}/roles/${idRol}`;
+          const { token } = getStore();
+          const options = {
+              method: "PUT",
+              body: JSON.stringify(jsonBody),
+              headers: {
+                'Content-Type': 'application/json',
+                  "Authorization": 'Bearer ' + token
+              }
+          };
+      
+          try {
+              const resp = await fetch(url, options);
+              if (resp.status  === 200) {
+                  const data = await resp.json(); 
+                  
+                  return { success: true, message :  "Rol editado exitosamente" };
+
+              } else {
+                  const errorData = await resp.json();
+                  console.log(errorData)
+                  return { success: false, error: errorData.error || "Error al editar el Rol" };
+              }
+          } catch (error) {
+              console.error(error);
+              return { success: false, error: "Error de red" };
+          }
+        },
+        deleteRol: async (idRol) =>{
+          const url = `${backendUrl}/roles/${idRol}`;
+          const { token } = getStore();
+          const options = {
+              method: "DELETE",      
+              headers: {
+                'Content-Type': 'application/json',
+                  "Authorization": 'Bearer ' + token
+              }
+          };
+      
+          try {
+              const resp = await fetch(url, options);
+              if (resp.status  === 200) {
+                  const data = await resp.json(); 
+                  
+                  return { success: true, message :  "Rol eliminado exitosamente" };
+
+              } else {
+                  const errorData = await resp.json();
+                  console.log(errorData)
+                  return { success: false, error: errorData.error || "Error al eliminar el Rol" };
+              }
+          } catch (error) {
+              console.error(error);
+              return { success: false, error: "Error de red" };
+          }
         }
 
       },

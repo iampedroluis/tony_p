@@ -7,6 +7,7 @@ import { Registro } from "./pages/Registro.jsx";
 import { Posts } from "./pages/Posts.jsx";
 import { CreatePost } from "./pages/CreatePost.jsx";
 import { Admin } from "./pages/Admin.jsx";
+import { Roles } from "./pages/Roles.jsx";
 // Componentes
 import { Navbar } from "./component/Navbar";
 import { Footer } from "./component/Footer.jsx";
@@ -34,12 +35,14 @@ const Layout = () => {
               <Route element={<Navigate to="/" replace />} path="/posts*" />
               <Route element={<Navigate to="/" replace />} path="/admin*" />
               <Route element={<Navigate to="/" replace />} path="/posts/create*" />
+              <Route element={<Navigate to="/" replace />} path="/roles" />
             </>
           ) : (
             <>
               <Route element={<Posts />} path="/posts" />
               <Route element={<CreatePost />} path="/posts/create" />
               <Route element={<Admin />} path="/admin" />
+              <Route element={<Roles to="/" replace />} path="/roles" />
             </>
           )}
         </Routes>
