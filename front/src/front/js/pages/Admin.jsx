@@ -349,7 +349,7 @@ export const Admin = () => {
                 >
                   {roles.map((role) => (
                     <option key={role.id} value={role.id} className="capitalize">
-                      <span className="capitalize">{role.rol}</span>
+                      {role.rol}
                     </option>
 
                   ))}

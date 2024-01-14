@@ -10,6 +10,7 @@ export const CreatePost = () => {
   const { store, actions } = useContext(Context);
   const [roles, setRoles] = useState([])
   const location = useLocation()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     rol_id: "",
     titulo: "",
@@ -103,6 +104,7 @@ export const CreatePost = () => {
         customClass: "swal-small"
       });
       handleLimpiar();
+      navigate('/')
     }
 
 
