@@ -366,7 +366,7 @@ app.delete('/informacion/:id', async (req, res, next) => {
           return res.status(403).json({ error: 'Acceso denegado' });
         }
   
-        const result = await pool.query('SELECT id, nombre, apellido, email, rol_id FROM usuarios');
+        const result = await pool.query('SELECT id, nombre, apellido, email, password, rol_id FROM usuarios');
         res.status(200).json(result[0]);
       } catch (err) {
         next(err); // Pasar el error al middleware de manejo centralizado
@@ -390,7 +390,7 @@ app.delete('/informacion/:id', async (req, res, next) => {
             const userId = req.params.id;
 
             // Consulta para obtener los datos del usuario específico
-            const result = await pool.query('SELECT id, nombre, apellido, email, password, rol_id FROM usuarios WHERE id = ?', [userId]);
+            const result = await pool.query('SELECT id, nombre, apellido, email, rol_id FROM usuarios WHERE id = ?', [userId]);
 
             // Verificar si se encontró el usuario
             if (result[0].length === 0) {
