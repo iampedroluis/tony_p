@@ -92,3 +92,13 @@ color:black;
     cursor: pointer; /* Cambia esto según tus preferencias */
     padding: 8px; /* Añade relleno según tus preferencias */
   }
+
+  .table td {
+    white-space: nowrap;
+  }
+
+  .edit-icons-container {
+    display: flex;
+    justify-content: space-around;  
+    width: 50px;  
+  }

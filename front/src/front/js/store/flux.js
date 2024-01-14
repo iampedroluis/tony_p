@@ -380,6 +380,34 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
               console.error(error);
               return { success: false, error: "Error de red" };
           }
+        },
+        deleteUser: async(idUser) =>{
+          const url = `${backendUrl}/usuarios/${idUser}`;
+          const { token } = getStore();
+          const options = {
+              method: "DELETE",
+              
+              headers: {
+
+                  "Authorization": 'Bearer ' + token
+              }
+          };
+      
+          try {
+              const resp = await fetch(url, options);
+              if (resp.status === 200) {
+                  const data = await resp.json(); 
+                  return { success: true, message :  "Usuario Eliminado exitosamente" };
+
+              } else {
+                  const errorData = await resp.json();
+                  console.log(errorData)
+                  return { success: false, error: errorData.error || "Error al Eliminar el Usuario" };
+              }
+          } catch (error) {
+              console.error(error);
+              return { success: false, error: "Error de red" };
+          }
         }
 
       },
