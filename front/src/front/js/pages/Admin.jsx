@@ -67,7 +67,7 @@ export const Admin = () => {
       apellido: editUser.apellido,
       email: editUser.email,
       rol_id: editUser.rol_id,
-      password : editUser.password
+      password: editUser.password
     };
     if (password.trim() !== "") {
       userToUpdate.password = password;
@@ -75,10 +75,10 @@ export const Admin = () => {
       // Si la contraseña no cambió, asignar la contraseña inicial
       userToUpdate.password = confirmPassword;
     }
-  
+
     // Lógica para guardar los cambios del usuario editado
     // actions.editUser(editUser); // Asegúrate de tener una función editUser en tu store o actions
-    console.log("Usuario editado:", JSON.stringify(userToUpdate) +  "el id del usuario es "+editUser.id);
+    console.log("Usuario editado:", JSON.stringify(userToUpdate) + "el id del usuario es " + editUser.id);
     handleCloseModal();
   };
 
@@ -277,7 +277,7 @@ export const Admin = () => {
           {editUser && (
             <form className=" dark:text-principal-white">
               <div className="mb-3 text-start">
-                <label htmlFor="nombre" className="form-label text-dark-black">
+                <label htmlFor="nombre" className="form-label text-dark-black dark:text-principal-white">
                   Nombre
                 </label>
                 <input
@@ -289,7 +289,7 @@ export const Admin = () => {
                 />
               </div>
               <div className="mb-3 text-start">
-                <label htmlFor="apellido" className="form-label text-dark-black">
+                <label htmlFor="apellido" className="form-label text-dark-black dark:text-principal-white">
                   Apellido
                 </label>
                 <input
@@ -313,7 +313,7 @@ export const Admin = () => {
                 />
               </div>
               <div className="mb-3 text-start">
-                <label htmlFor="password" className="form-label text-dark-black">
+                <label htmlFor="password" className="form-label text-dark-black dark:text-principal-white">
                   Contraseña
                 </label>
                 <input
@@ -321,11 +321,11 @@ export const Admin = () => {
                   className="form-control"
                   id="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value) }
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div className="mb-3 text-start">
-                <label htmlFor="confirmPassword" className="form-label text-dark-black">
+                <label htmlFor="confirmPassword" className="form-label text-dark-black dark:text-principal-white ">
                   Confirmar Contraseña
                 </label>
                 <input
@@ -338,19 +338,20 @@ export const Admin = () => {
               </div>
 
               <div className="mb-3 text-start">
-                <label htmlFor="rol" className="form-label  text-dark-black">
+                <label htmlFor="rol" className="form-label  text-dark-black dark:text-principal-white">
                   Rol
                 </label>
                 <select
-                  className="form-select"
+                  className="form-select text-dark-black dark:text-principal-white capitalize"
                   id="rol"
                   value={editUser.rol_id}
                   onChange={(e) => setEditUser({ ...editUser, rol_id: parseInt(e.target.value) })}
                 >
                   {roles.map((role) => (
-                    <option key={role.id} value={role.id}>
-                      {role.label}
+                    <option key={role.id} value={role.id} className="capitalize">
+                      <span className="capitalize">{role.rol}</span>
                     </option>
+
                   ))}
                 </select>
               </div>
