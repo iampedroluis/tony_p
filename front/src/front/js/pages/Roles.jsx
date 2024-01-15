@@ -47,6 +47,21 @@ export const Roles = () => {
                     showConfirmButton: false,
                     timer: 2500
                   });
+                  const fetchRoles = async () => {
+                    try {
+                        const resp = await actions.getRoles()
+                        if (resp.success) {
+                            setRoles(store.roles);
+        
+                        }
+        
+                    } catch (error) {
+                        console.error("Error fetching roles", error);
+                    }
+                };
+        
+                // Llamada a la función asincrónica
+                fetchRoles();
             }
         } catch (error) {
                 console.error(error)
