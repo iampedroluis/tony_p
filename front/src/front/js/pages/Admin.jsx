@@ -40,10 +40,25 @@ export const Admin = () => {
   const [hoveredUserId, setHoveredUserId] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState("");
 
+// Función asincrónica para obtener los usuarios
+const fetchUsuarios = async () => {
+  try {
+    const data = await actions.getUsuarios();
+    setUsuarios(data);
+  } catch (error) {
+    console.error("Error fetching usuarios", error);
+  }
+};
+
+// Llamada a la función asincrónica
+
+
+
 
   const handleEdit = (user) => {
     setEditUser(user);
     setConfirmPassword(user.password)
+    setPassword(user.password)
     setShowModal(true);
   };
 
@@ -52,7 +67,7 @@ export const Admin = () => {
     setShowModal(false);
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async() => {
     if (password !== confirmPassword) {
       // Muestra un mensaje de error indicando que las contraseñas no coinciden
       Swal.fire({
@@ -62,23 +77,37 @@ export const Admin = () => {
       });
       return;
     }
-    const userToUpdate = {
-      nombre: editUser.nombre,
-      apellido: editUser.apellido,
-      email: editUser.email,
-      rol_id: editUser.rol_id,
-      password: editUser.password
-    };
+    let editedFields = {};
     if (password.trim() !== "") {
-      userToUpdate.password = password;
-    } else {
-      // Si la contraseña no cambió, asignar la contraseña inicial
-      userToUpdate.password = confirmPassword;
+      editedFields.password = password;
     }
+  const userToUpdate = {
+    nombre: editUser.nombre,
+    apellido: editUser.apellido,
+    email: editUser.email,
+    rol_id: editUser.rol_id,
+    ...editedFields,
+};
+    
 
     // Lógica para guardar los cambios del usuario editado
     // actions.editUser(editUser); // Asegúrate de tener una función editUser en tu store o actions
     console.log("Usuario editado:", JSON.stringify(userToUpdate) + "el id del usuario es " + editUser.id);
+    try {
+      const resp = await actions.updateUser(userToUpdate, editUser.id)
+      if(resp.success){
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `El Usuario se Edito exitosamente`,
+          showConfirmButton: false,
+          timer: 2500
+        });
+        fetchUsuarios();
+      }
+    } catch (error) {
+      
+    }
     handleCloseModal();
   };
 
@@ -136,17 +165,6 @@ export const Admin = () => {
             timer: 2500
           });
 
-          // Función asincrónica para obtener los usuarios
-          const fetchUsuarios = async () => {
-            try {
-              const data = await actions.getUsuarios();
-              setUsuarios(data);
-            } catch (error) {
-              console.error("Error fetching usuarios", error);
-            }
-          };
-
-          // Llamada a la función asincrónica
           fetchUsuarios();
         }
       }

@@ -408,6 +408,37 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
               console.error(error);
               return { success: false, error: "Error de red" };
           }
+        },
+        updateUser: async (jsonBody, idUser) =>{
+            
+          const url = `${backendUrl}/usuarios/${idUser}`;
+          const { token } = getStore();
+          const options = {
+              method: "PUT",
+              body: JSON.stringify(jsonBody),
+              headers: {
+                'Content-Type': 'application/json',
+                  "Authorization": 'Bearer ' + token
+              }
+          };
+      
+          try {
+              const resp = await fetch(url, options);
+              if (resp.status  === 200) {
+                  const data = await resp.json(); 
+                  
+                  return { success: true, message :  "Usuario editado exitosamente" };
+
+              } else {
+                  const errorData = await resp.json();
+                  console.log(errorData)
+                  return { success: false, error: errorData.error || "Error al editar el Usuario" };
+              }
+          } catch (error) {
+              console.error(error);
+              return { success: false, error: "Error de red" };
+          }
+        
         }
 
       },

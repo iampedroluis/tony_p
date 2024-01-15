@@ -459,9 +459,13 @@ app.delete('/informacion/:id', async (req, res, next) => {
           return res.status(403).json({ error: 'Acceso denegado' });
         }
   
-        if (id == "1" && rol_id != 1){
+        if (id == "1" && rol_id != 1) {
           return res.status(403).json({ error: 'No se puede modificar el rol de ese usuario' });
         }
+  
+        // Obtener la contraseña actual del usuario desde la base de datos
+        const [userData] = await pool.query('SELECT password FROM usuarios WHERE id = ?', [id]);
+        const currentPassword = userData[0].password;
   
         // Crear un arreglo para los valores y una cadena para la consulta SQL
         let query = 'UPDATE usuarios SET ';
@@ -480,8 +484,8 @@ app.delete('/informacion/:id', async (req, res, next) => {
           queryFields.push('email = ?');
           queryParams.push(email);
         }
-        if (password) {
-          const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
+        if (password && password !== currentPassword) {
+          const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la nueva contraseña
           queryFields.push('password = ?');
           queryParams.push(hashedPassword);
         }
@@ -507,6 +511,7 @@ app.delete('/informacion/:id', async (req, res, next) => {
       res.sendStatus(403); // No se proporcionó el token de portador
     }
   });
+  
   
   
   
