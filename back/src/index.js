@@ -459,22 +459,46 @@ app.delete('/informacion/:id', async (req, res, next) => {
           return res.status(403).json({ error: 'Acceso denegado' });
         }
   
-        // Verificar que el usuario a modificar no tenga rol_id igual a 1 y sea usuario id 1
-        //const user = await pool.query('SELECT rol_id FROM usuarios WHERE id = ?', [id]);
-  
-        if (id == "1"){
-            if (rol_id != 1){
-              return res.status(403).json({ error: 'No se puede modificar el rol de ese usuario' });
-            }
-          
+        if (id == "1" && rol_id != 1){
+          return res.status(403).json({ error: 'No se puede modificar el rol de ese usuario' });
         }
   
-        // Si el usuario tiene un id distinto a 1, se procede con la modificación
-        await pool.query(
-          'UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, password = ?, rol_id = ? WHERE id = ?',
-          [nombre, apellido, email, password, rol_id, id]
-        );
+        // Crear un arreglo para los valores y una cadena para la consulta SQL
+        let query = 'UPDATE usuarios SET ';
+        let queryParams = [];
+        let queryFields = [];
   
+        if (nombre) {
+          queryFields.push('nombre = ?');
+          queryParams.push(nombre);
+        }
+        if (apellido) {
+          queryFields.push('apellido = ?');
+          queryParams.push(apellido);
+        }
+        if (email) {
+          queryFields.push('email = ?');
+          queryParams.push(email);
+        }
+        if (password) {
+          const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
+          queryFields.push('password = ?');
+          queryParams.push(hashedPassword);
+        }
+        if (rol_id) {
+          queryFields.push('rol_id = ?');
+          queryParams.push(rol_id);
+        }
+  
+        if (queryFields.length === 0) {
+          return res.status(400).json({ error: 'No hay datos para actualizar' });
+        }
+  
+        query += queryFields.join(', ');
+        query += ' WHERE id = ?';
+        queryParams.push(id);
+  
+        await pool.query(query, queryParams);
         res.status(200).json({ message: 'Usuario actualizado exitosamente' });
       } catch (err) {
         next(err); // Pasar el error al middleware de manejo centralizado
@@ -483,6 +507,8 @@ app.delete('/informacion/:id', async (req, res, next) => {
       res.sendStatus(403); // No se proporcionó el token de portador
     }
   });
+  
+  
   
 
 
