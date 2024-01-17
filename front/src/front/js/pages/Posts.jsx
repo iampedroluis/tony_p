@@ -15,7 +15,8 @@ export const Posts = () => {
   const [editPost, setEditPost] = useState({ titulo: "", descripcion: "", rol_id: "", originalPost: {} });
   const [postToDeleteId, setPostToDeleteId] = useState(null);
   const [selectedPostId, setSelectedPostId] = useState(null);
-
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,20 +26,14 @@ export const Posts = () => {
       // Si la llamada fue exitosa, actualiza el estado posts
       if (result.success) {
         setPosts(store.posts);
-
       }
-
-
-
     };
 
     // Llama a fetchData cuando el componente se monta
     fetchData();
     setUser(store.user)
-    console.log(store.user)
     const fetchRoles = async () => {
       const resp = await actions.getRoles()
-
       if (resp.success) {
         setRoles(store.roles)
       }
@@ -46,18 +41,14 @@ export const Posts = () => {
     fetchRoles()
   }, [store.user]);
 
-
   useEffect(() => {
     const handleImageLoad = () => {
       setLoadedImages((prevCount) => prevCount + 1);
     };
-
     const images = document.querySelectorAll('.card-img-top');
-
     images.forEach((img) => {
       img.addEventListener('load', handleImageLoad);
     });
-
     return () => {
       images.forEach((img) => {
         img.removeEventListener('load', handleImageLoad);
@@ -75,7 +66,6 @@ export const Posts = () => {
       return newIndexes;
     });
   };
-
   // Función para obtener el nombre del rol según el ID del rol
   const getNombreRol = (idRol) => {
     const rol = roles.find((r) => r.id === idRol);
@@ -83,19 +73,18 @@ export const Posts = () => {
   };
 
   const handleEdit = (post) => {
-    console.log(post);
     setPostToDeleteId(post.id);
     // Verificar y asignar un valor predeterminado si es null
 
     setEditPost({
-      titulo : post.titulo,
-      descripcion : post.descripcion,
-      rol_id : post.rol_id
+      titulo: post.titulo,
+      descripcion: post.descripcion,
+      rol_id: post.rol_id
     });
-
     setSelectedPostId(post.id);
     setShowModal(true);
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -103,7 +92,7 @@ export const Posts = () => {
   const handleSaveChanges = async () => {
     try {
       const formDataToSend = new FormData();
-      
+
       for (const key in editPost) {
         // No añadir el 'id' al formulario
         if (editPost[key] instanceof File) {
@@ -113,14 +102,11 @@ export const Posts = () => {
           formDataToSend.append(key, editPost[key]);
         }
       }
-  
+
       // Llama a la acción para actualizar el post
       const result = await actions.updatePost(formDataToSend, selectedPostId);
-      console.log(formDataToSend);
-  
       // Verifica si la actualización fue exitosa
       if (result.success) {
-        console.log("Post actualizado exitosamente");
         Swal.fire({
           position: "top-end",
           showConfirmButton: false,
@@ -133,17 +119,13 @@ export const Posts = () => {
         const fetchData = async () => {
           // Llama a la acción para obtener los posts
           const result = await actions.getPosts();
-    
+
           // Si la llamada fue exitosa, actualiza el estado posts
           if (result.success) {
             setPosts(store.posts);
-    
           }
-    
-    
-    
         };
-    
+
         // Llama a fetchData cuando el componente se monta
         fetchData();
       } else {
@@ -155,11 +137,10 @@ export const Posts = () => {
       handleCloseModal();
     }
   };
-  
+
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     const selectedFile = files[0];
-
     if (name === "imagen" && !selectedFile.type.startsWith("image/")) {
       Swal.fire({
         position: "top-end",
@@ -201,59 +182,64 @@ export const Posts = () => {
       ...editPost,
       rol_id: value,
     });
-    console.log(value);
   };
 
   useEffect(() => {
-    console.log(editPost);
   }, [editPost]);
 
-const handleDelete = async (post) =>{
-  
-  try {
-    const confirmation = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'No podrás revertir esto',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminarlo'
-  });
-  if (confirmation.isConfirmed) {
-    const resp = await actions.deletePost(postToDeleteId)
-    if (resp.success) {
-      Swal.fire({
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 1500,
-        icon: 'success',
-        title: 'Post Eliminado',
-        text: 'El Post fue ELiminado exitosamente',
-        customClass: "swal-small"
+  const handleDelete = async (post) => {
+    try {
+      const confirmation = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'No podrás revertir esto',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminarlo'
       });
-    }
-    const fetchData = async () => {
-      // Llama a la acción para obtener los posts
-      const result = await actions.getPosts();
+      if (confirmation.isConfirmed) {
+        const resp = await actions.deletePost(postToDeleteId)
+        if (resp.success) {
+          Swal.fire({
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 1500,
+            icon: 'success',
+            title: 'Post Eliminado',
+            text: 'El Post fue ELiminado exitosamente',
+            customClass: "swal-small"
+          });
+        }
+        const fetchData = async () => {
+          // Llama a la acción para obtener los posts
+          const result = await actions.getPosts();
 
-      // Si la llamada fue exitosa, actualiza el estado posts
-      if (result.success) {
-        setPosts(store.posts);
+          // Si la llamada fue exitosa, actualiza el estado posts
+          if (result.success) {
+            setPosts(store.posts);
+          }
+        };
+        // Llama a fetchData cuando el componente se monta
+        fetchData();
       }
-    };
+    } catch (error) {
+      console.error(error)
+    } finally {
+      handleCloseModal()
+    }
 
-    // Llama a fetchData cuando el componente se monta
-    fetchData();
   }
-  } catch (error) {
-    console.error(error)
-  }finally{
-    handleCloseModal()
-  }
- 
-}
 
+  const openImageModal = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+    setShowImageModal(true);
+  };
+
+  const closeImageModal = () => {
+    setShowImageModal(false);
+    setSelectedImageUrl("");
+  };
 
   return (
     <div className="container mb-5 mt-5 d-flex flex-column align-items-center justify-content-center">
@@ -268,19 +254,20 @@ const handleDelete = async (post) =>{
             <div className="col-md-4">
               <img
                 src={`http://localhost:3000/${post.url_imagen}`}
-                className={`img-fluid rounded-start card-img-top h-100 `}
+                className={`img-fluid rounded-start card-img-top h-100 cursor-pointer`}
                 alt="..."
+                style={{ objectFit: expandedDescription[index] ? 'contain' : 'fill' }}
+                onClick={() => openImageModal(`http://localhost:3000/${post.url_imagen}`)}
               />
             </div>
             <div className="col-md-8 ">
               <div className="card-body ">
                 <div className=" flex justify-between">
-                <h5 className="card-title ">{post.titulo}</h5>
-                <button className="pb-5 ps-5" onClick={() => handleEdit(post)}>
-                <i className="fa-solid fa-pencil "></i>
-                </button>
+                  <h5 className="card-title ">{post.titulo}</h5>
+                  <button className="pb-5 ps-5" onClick={() => handleEdit(post)}>
+                    <i className="fa-solid fa-pencil "></i>
+                  </button>
                 </div>
-                
                 <p className="card-text">
                   {expandedDescription[index]
                     ? post.descripcion
@@ -288,7 +275,6 @@ const handleDelete = async (post) =>{
                 </p>
                 {post.descripcion.length > 250 && (
                   <a
-
                     onClick={() => toggleDescriptionExpand(index)}
                     className="btn btn-link"
                   >
@@ -350,7 +336,6 @@ const handleDelete = async (post) =>{
                       placeholder="Ingrese la desciocion"
                       value={editPost.descripcion}
                       onChange={(e) => setEditPost({ ...editPost, descripcion: e.target.value })}
-
                     ></textarea>
                   </div>
                   <div className="mb-3">
@@ -363,12 +348,8 @@ const handleDelete = async (post) =>{
                       id="imagen"
                       name="imagen"
                       placeholder="Ingrese imagen"
-
                       onChange={handleFileChange}
-
-
                     />
-                 
                   </div>
                   <div className="mb-3 ">
                     <label htmlFor="archivo" className="form-label text-dark-black font-bold dark:text-principal-white ">
@@ -380,40 +361,35 @@ const handleDelete = async (post) =>{
                       id="archivo"
                       name="archivo"
                       placeholder="Ingrese el archivo PDF"
-
                       onChange={handleFileChange}
-
                     />
-
-                    
-
                   </div>
                   <div className="mb-3 d-flex justify-between align-items-center">
-  <label htmlFor="rol_id" className="form-label mt-4 text-dark-black font-bold dark:text-principal-white">
-    Postear a:
-  </label>
-  <div className="dropdown">
-    <label htmlFor="rol" className="form-label text-dark-black"></label>
-    <select
-      className="form-select align-middle w-100"
-      id="rol"
-      value={editPost.rol_id}
-      onChange={handleDropdownChange}
-      name="rol_id"
-    >
-      <option value="" disabled selected>
-        Seleccionar Rol
-      </option>
-      {roles
-        .filter((role) => role.rol.toLowerCase() !== 'admin')
-        .map((role) => (
-          <option key={role.id} value={role.id}>
-            {role.rol}
-          </option>
-        ))}
-    </select>
-  </div>
-</div>
+                    <label htmlFor="rol_id" className="form-label mt-4 text-dark-black font-bold dark:text-principal-white">
+                      Postear a:
+                    </label>
+                    <div className="dropdown">
+                      <label htmlFor="rol" className="form-label text-dark-black"></label>
+                      <select
+                        className="form-select align-middle w-100"
+                        id="rol"
+                        value={editPost.rol_id}
+                        onChange={handleDropdownChange}
+                        name="rol_id"
+                      >
+                        <option value="" disabled selected>
+                          Seleccionar Rol
+                        </option>
+                        {roles
+                          .filter((role) => role.rol.toLowerCase() !== 'admin')
+                          .map((role) => (
+                            <option key={role.id} value={role.id}>
+                              {role.rol}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
                   <div className="mb-3 mt-5 d-flex justify-content-end">
 
                   </div>
@@ -434,6 +410,25 @@ const handleDelete = async (post) =>{
           </Button>
         </Modal.Footer>
       </Modal>
+      {/* Modal para mostrar la imagen */}
+      <Modal show={showImageModal} onHide={closeImageModal} centered >
+        <Modal.Body className="dark:bg-dark-black">
+          {showImageModal && (
+            <div className="fixed top-3 left-1/2 transform -translate-x-1/2 z-10000 ">
+              <button className="rounded-full bg-[#00000066] cursor-pointer p-2 px-3 my-2 hover:bg-[#000000ab] transition delay-75 duration-100" onClick={closeImageModal}>
+                <i className="fa-solid fa-x text-principal-white transition delay-75 duration-100"></i>
+              </button>
+            </div>
+          )}
+          <img
+            src={selectedImageUrl}
+            alt="Imagen ampliada"
+            className="img-fluid"
+          />
+        </Modal.Body>
+
+      </Modal>
+
     </div>
   );
 };

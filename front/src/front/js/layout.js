@@ -32,9 +32,9 @@ const Layout = () => {
           <Route element={<Registro />} path="/registro" />
           {!store.token ? (
             <>
-              <Route element={<Navigate to="/" replace />} path="/posts*" />
-              <Route element={<Navigate to="/" replace />} path="/admin*" />
-              <Route element={<Navigate to="/" replace />} path="/posts/create*" />
+              <Route element={<Navigate to="/" replace />} path="/posts" />
+              <Route element={<Navigate to="/" replace />} path="/admin" />
+              <Route element={<Navigate to="/" replace />} path="/posts/create" />
               <Route element={<Navigate to="/" replace />} path="/roles" />
             </>
           ) : (

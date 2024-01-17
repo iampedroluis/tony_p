@@ -6,9 +6,6 @@ import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from 'sweetalert2'
 
-
-
-
 export const Admin = () => {
   const { store, actions } = useContext(Context);
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +18,6 @@ export const Admin = () => {
   const [password, setPassword] = useState("")
   // Puedes utilizar este array en lugar del array vacío que tenías en tu código.
 
-
   const offset = currentPage * usuariosPerPage;
   const filteredUsuarios = usuarios.filter(
     (usuario) =>
@@ -30,9 +26,7 @@ export const Admin = () => {
       usuario.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const currentUsuarios = filteredUsuarios.slice(offset, offset + usuariosPerPage);
-
   const pageCount = Math.ceil(filteredUsuarios.length / usuariosPerPage);
-
   const handlePageClick = ({ selected: selectedPage }) => {
     setCurrentPage(selectedPage);
   };
@@ -40,21 +34,15 @@ export const Admin = () => {
   const [hoveredUserId, setHoveredUserId] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState("");
 
-// Función asincrónica para obtener los usuarios
-const fetchUsuarios = async () => {
-  try {
-    const data = await actions.getUsuarios();
-    setUsuarios(data);
-  } catch (error) {
-    console.error("Error fetching usuarios", error);
-  }
-};
-
-// Llamada a la función asincrónica
-
-
-
-
+  // Función asincrónica para obtener los usuarios
+  const fetchUsuarios = async () => {
+    try {
+      const data = await actions.getUsuarios();
+      setUsuarios(data);
+    } catch (error) {
+      console.error("Error fetching usuarios", error);
+    }
+  };
   const handleEdit = (user) => {
     setEditUser(user);
     setConfirmPassword(user.password)
@@ -67,7 +55,7 @@ const fetchUsuarios = async () => {
     setShowModal(false);
   };
 
-  const handleSaveChanges = async() => {
+  const handleSaveChanges = async () => {
     if (password !== confirmPassword) {
       // Muestra un mensaje de error indicando que las contraseñas no coinciden
       Swal.fire({
@@ -81,21 +69,17 @@ const fetchUsuarios = async () => {
     if (password.trim() !== "") {
       editedFields.password = password;
     }
-  const userToUpdate = {
-    nombre: editUser.nombre,
-    apellido: editUser.apellido,
-    email: editUser.email,
-    rol_id: editUser.rol_id,
-    ...editedFields,
-};
-    
+    const userToUpdate = {
+      nombre: editUser.nombre,
+      apellido: editUser.apellido,
+      email: editUser.email,
+      rol_id: editUser.rol_id,
+      ...editedFields,
+    };
 
-    // Lógica para guardar los cambios del usuario editado
-    // actions.editUser(editUser); // Asegúrate de tener una función editUser en tu store o actions
-    console.log("Usuario editado:", JSON.stringify(userToUpdate) + "el id del usuario es " + editUser.id);
     try {
       const resp = await actions.updateUser(userToUpdate, editUser.id)
-      if(resp.success){
+      if (resp.success) {
         Swal.fire({
           position: "top-end",
           icon: "success",
@@ -106,7 +90,7 @@ const fetchUsuarios = async () => {
         fetchUsuarios();
       }
     } catch (error) {
-      
+
     }
     handleCloseModal();
   };
@@ -121,22 +105,19 @@ const fetchUsuarios = async () => {
         console.error("Error fetching usuarios", error);
       }
     };
-
-    // Llamada a la función asincrónica
     fetchUsuarios();
     const fetchRoles = async () => {
       try {
         const data = await actions.getRoles()
         if (data.success) {
           setRoles(store.roles)
-          console.log(roles)
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
     fetchRoles()
-  }, [currentPage, actions.getUsuarios]);
+  }, [currentPage]);
 
   const getRolById = (roleId) => {
     const role = roles.find((r) => r.id === roleId);
@@ -196,10 +177,8 @@ const fetchUsuarios = async () => {
                 setSearchTerm(e.target.value.trim());
               }}
             />
-
           </div>
         </div>
-
         <div className="col-md-12  mt-5">
           <div className="form registro  p-4 rounded border shadow p-3 mb-5 dark:bg-dark-black  rounded">
             <table className="table table-borderless bg-transparent table-hover ">
@@ -264,7 +243,6 @@ const fetchUsuarios = async () => {
               </tbody>
             </table>
             <div className="d-flex justify-center mt-5">
-
               <ReactPaginate
                 previousLabel={"Anterior"}
                 nextLabel={"Siguiente"}
@@ -284,7 +262,6 @@ const fetchUsuarios = async () => {
           </div>
         </div>
       </div>
-
       {/* Modal para editar usuario */}
       <Modal show={showModal} onHide={handleCloseModal} className="text-center ">
         <Modal.Header className="dark:bg-dark-black" closeButton>
@@ -354,7 +331,6 @@ const fetchUsuarios = async () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
-
               <div className="mb-3 text-start">
                 <label htmlFor="rol" className="form-label  text-dark-black dark:text-principal-white">
                   Rol
@@ -369,7 +345,6 @@ const fetchUsuarios = async () => {
                     <option key={role.id} value={role.id} className="capitalize">
                       {role.rol}
                     </option>
-
                   ))}
                 </select>
               </div>
@@ -383,13 +358,8 @@ const fetchUsuarios = async () => {
           <Button variant="primary" onClick={handleSaveChanges}>
             Guardar Cambios
           </Button>
-
         </Modal.Footer>
       </Modal>
-
-
-
-
     </div>
   );
 };

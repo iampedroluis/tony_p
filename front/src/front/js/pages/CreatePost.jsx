@@ -4,8 +4,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Context } from "../store/appContext";
 import Swal from 'sweetalert2';
 
-
-
 export const CreatePost = () => {
   const { store, actions } = useContext(Context);
   const [roles, setRoles] = useState([])
@@ -65,13 +63,13 @@ export const CreatePost = () => {
       [name]: selectedFile,
     });
   };
+
   const handleDropdownChange = (e) => {
     const value = e.target.options[e.target.selectedIndex].value;
     setFormData({
       ...formData,
       rol_id: value,
     });
-    console.log(value);
   };
 
   const handleLimpiar = () => {
@@ -90,9 +88,7 @@ export const CreatePost = () => {
     for (const key in formData) {
       formDataToSend.append(key, formData[key]);
     }
-    // Aquí puedes enviar los datos al backend o realizar las acciones necesarias
     const resp = await actions.createPost(formDataToSend);
-    console.log(formDataToSend)
     if (resp.success) {
       Swal.fire({
         position: "top-end",
@@ -106,23 +102,18 @@ export const CreatePost = () => {
       handleLimpiar();
       navigate('/')
     }
-
-
-
-
   };
 
   useEffect(() => {
-
     const fetchRoles = async () => {
       const resp = await actions.getRoles()
       if (resp.success) {
         setRoles(store.roles)
-        console.log(roles)
       }
     }
     fetchRoles()
   }, [])
+
   return (
     <div className="container mb-5 mt-5">
       <div className="row">
@@ -173,7 +164,6 @@ export const CreatePost = () => {
                 id="imagen"
                 name="imagen"
                 onChange={handleFileChange}
-
               />
             </div>
             <div className="mb-3 ">

@@ -34,45 +34,53 @@ export const Roles = () => {
 
     const [editedRolId, setEditedRolId] = useState(null);
 
-    const handleCreate = async () =>{
-        console.log(newRol)
-        try {
-            const resp = await actions.createRol(newRol)
-
-            if(resp.success){
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: `El Rol ${newRol.rol} se creo exitosamente`,
-                    showConfirmButton: false,
-                    timer: 2500
-                  });
-                  const fetchRoles = async () => {
-                    try {
-                        const resp = await actions.getRoles()
-                        if (resp.success) {
-                            setRoles(store.roles);
-        
-                        }
-        
-                    } catch (error) {
-                        console.error("Error fetching roles", error);
-                    }
-                };
-        
-                // Llamada a la función asincrónica
-                fetchRoles();
+    const handleCreate = async () => {
+        if (typeof newRol.rol !== "string" || newRol.rol.trim() === "") {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "El Nombre del Rol no puede ir vacío",
+            showConfirmButton: false,
+            timer: 2500,
+          });
+        } else {
+          try {
+            const resp = await actions.createRol(newRol);
+            if (resp.success) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: `El Rol "${newRol.rol}" se creó exitosamente`,
+                showConfirmButton: false,
+                timer: 2500,
+              });
+              // Actualiza la lista de roles después de la creación exitosa
+              const fetchRoles = async () => {
+                try {
+                  const resp = await actions.getRoles();
+                  if (resp.success) {
+                    setRoles(store.roles);
+                  }
+                } catch (error) {
+                  console.error("Error fetching roles", error);
+                }
+              };
+      
+              // Llamada a la función asincrónica
+              fetchRoles();
             }
-        } catch (error) {
-                console.error(error)
-        }finally{
+          } catch (error) {
+            console.error(error);
+          } finally {
             setNewRol({ rol: "" });
+          }
         }
-    }
+      };
+      
 
     const handleEdit = (rol) => {
         setEditRol(rol);
-        setEditedRolId(rol.id); 
+        setEditedRolId(rol.id);
         setShowModal(true);
     };
 
@@ -82,38 +90,33 @@ export const Roles = () => {
     };
 
     const handleSaveChanges = async () => {
-        // Lógica para guardar los cambios del rol editado
-        // actions.editRol(editRol); // Asegúrate de tener una función editRol en tu store o actions
         try {
             const resp = await actions.editRol(editRol, editedRolId)
-            if(resp.success){
+            if (resp.success) {
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
                     title: `El Rol se edito exitosamente`,
                     showConfirmButton: false,
                     timer: 2500
-                  });
+                });
             }
-             // Función asincrónica para obtener los roles
-        const fetchRoles = async () => {
-            try {
-                const resp = await actions.getRoles()
-                if (resp.success) {
-                    setRoles(store.roles);
-
+            // Función asincrónica para obtener los roles
+            const fetchRoles = async () => {
+                try {
+                    const resp = await actions.getRoles()
+                    if (resp.success) {
+                        setRoles(store.roles);
+                    }
+                } catch (error) {
+                    console.error("Error fetching roles", error);
                 }
-
-            } catch (error) {
-                console.error("Error fetching roles", error);
-            }
-        };
-
-        // Llamada a la función asincrónica
-        fetchRoles();
+            };
+            // Llamada a la función asincrónica
+            fetchRoles();
         } catch (error) {
             console.error(error)
-        }finally{
+        } finally {
             await actions.getRoles()
         }
         handleCloseModal();
@@ -130,7 +133,6 @@ export const Roles = () => {
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Sí, eliminarlo'
             });
-
             if (confirmation.isConfirmed) {
                 const resp = await actions.deleteRol(rolId);
                 if (resp.success) {
@@ -141,7 +143,6 @@ export const Roles = () => {
                         showConfirmButton: false,
                         timer: 2500
                     });
-
                     const fetchRoles = async () => {
                         try {
                             const resp = await actions.getRoles();
@@ -152,7 +153,6 @@ export const Roles = () => {
                             console.error("Error fetching roles", error);
                         }
                     };
-
                     fetchRoles();
                 }
             }
@@ -170,9 +170,7 @@ export const Roles = () => {
                 const resp = await actions.getRoles()
                 if (resp.success) {
                     setRoles(store.roles);
-
                 }
-
             } catch (error) {
                 console.error("Error fetching roles", error);
             }
@@ -192,16 +190,15 @@ export const Roles = () => {
                 </div>
                 <div className="container d-flex mt-5 align-items-center">
                     <p className="text-dark-black dark:text-principal-white font-semibold me-2">Crear nuevo Rol: </p>
-                    <input type="text" placeholder="nuevo rol" 
-                    value={newRol.rol} 
-                    className="form-control w-25 me-2" onChange={(e) => setNewRol({rol: e.target.value})} />
-                    <button 
-                    className="bg-color-primary text-principal-white font-semibold hover:border-principal-white rounded-lg h-100 p-2 hover:bg-green-800"
-                    onClick={handleCreate}>
+                    <input type="text" placeholder="nuevo rol"
+                        value={newRol.rol}
+                        className="form-control w-25 me-2" onChange={(e) => setNewRol({ rol: e.target.value })} />
+                    <button
+                        className="bg-color-primary text-principal-white font-semibold hover:border-principal-white rounded-lg h-100 p-2 hover:bg-green-800"
+                        onClick={handleCreate}>
                         Crear Rol
                     </button>
                 </div>
-
                 <div className="container d-flex justify-content-center">
                     <div className="mt-5 d-flex align-items-center justify-content-between w-50">
                         <input
@@ -217,7 +214,6 @@ export const Roles = () => {
                         />
                     </div>
                 </div>
-
                 <div className="col-md-12 mt-5 container w-50 ">
                     <div className="form registro p-4 rounded border shadow p-3 mb-5 dark:bg-dark-black rounded ">
                         <table className="table table-borderless bg-transparent table-hover">
