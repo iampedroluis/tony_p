@@ -249,56 +249,60 @@ export const Posts = () => {
         </h2>
       </div>
       {posts.map((post, index) => (
-        <div key={index} className="card w-75 h-100 border-5 shadow-2xl border-[#F9FCFD] bg-[#F9FCFD] mt-5 mb-3" style={{ maxWidth: '540px' }}>
-          <div className="row g-0">
-            <div className="col-md-4">
-              <img
-                src={`http://localhost:3000/${post.url_imagen}`}
-                className={`img-fluid rounded-start card-img-top h-100 cursor-pointer`}
-                alt="..."
-                style={{ objectFit: expandedDescription[index] ? 'contain' : 'fill' }}
-                onClick={() => openImageModal(`http://localhost:3000/${post.url_imagen}`)}
-              />
-            </div>
-            <div className="col-md-8 ">
-              <div className="card-body ">
-                <div className=" flex justify-between">
-                  <h5 className="card-title ">{post.titulo}</h5>
-                  <button className="pb-5 ps-5" onClick={() => handleEdit(post)}>
-                    <i className="fa-solid fa-pencil "></i>
-                  </button>
-                </div>
-                <p className="card-text">
-                  {expandedDescription[index]
-                    ? post.descripcion
-                    : `${post.descripcion.slice(0, 150)}...`}
-                </p>
-                {post.descripcion.length > 250 && (
-                  <a
-                    onClick={() => toggleDescriptionExpand(index)}
-                    className="btn btn-link"
-                  >
-                    {expandedDescription[index] ? "Leer menos" : "Leer más"}
-                  </a>
-                )}
-                <p className="mt-5 font-light text-color-primary">
-                  {getNombreRol(post.rol_id).charAt(0).toUpperCase() +
-                    getNombreRol(post.rol_id).slice(1).toLowerCase()}
-                </p>
-                {post.url_archivo && (
-                  <button
-                    type="button"
-                    className="btn btn-outline-dark text-start border-dark-black hover:bg-dark-black hover:text-principal-white"
-                    onClick={() => openPDF(post.url_archivo)}
-                  >
-                    Descargar PDF <i className="fa-solid fa-arrow-right"></i>
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+  <div key={index} className="card w-100 h-100 border-5 shadow-2xl border-[#F9FCFD] bg-[#F9FCFD] mt-5 mb-3" style={{ maxWidth: '680px' }}>
+    <div className="row g-0">
+      <div className="col-md-6">
+        <div className="position-relative h-100">
+          <img
+            src={`http://localhost:3000/${post.url_imagen}`}
+            className="img-fluid rounded-start card-img-top h-100 cursor-pointer"
+            alt="..."
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+            onClick={() => openImageModal(`http://localhost:3000/${post.url_imagen}`)}
+          />
         </div>
-      ))}
+      </div>
+      <div className="col-md-6">
+        <div className="card-body">
+          <div className="flex justify-between">
+            <h5 className="card-title">{post.titulo}</h5>
+            <button className="pb-5 ps-5" onClick={() => handleEdit(post)}>
+              <i className="fa-solid fa-pencil"></i>
+            </button>
+          </div>
+          <p className="card-text">
+            {expandedDescription[index]
+              ? post.descripcion
+              : `${post.descripcion.slice(0, 150)}...`}
+          </p>
+          {post.descripcion.length > 250 && (
+            <a
+              onClick={() => toggleDescriptionExpand(index)}
+              className="btn btn-link"
+            >
+              {expandedDescription[index] ? "Leer menos" : "Leer más"}
+            </a>
+          )}
+          <p className="mt-5 font-light text-color-primary">
+            {getNombreRol(post.rol_id).charAt(0).toUpperCase() +
+              getNombreRol(post.rol_id).slice(1).toLowerCase()}
+          </p>
+          {post.url_archivo && (
+            <button
+              type="button"
+              className="btn btn-outline-dark text-start border-dark-black hover:bg-dark-black hover:text-principal-white"
+              onClick={() => openPDF(post.url_archivo)}
+            >
+              Descargar PDF <i className="fa-solid fa-arrow-right"></i>
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+))}
+
+
       {/* Modal para editar usuario */}
       <Modal show={showModal} onHide={handleCloseModal} className="text-center">
         <Modal.Header className="dark:bg-dark-black" closeButton>
