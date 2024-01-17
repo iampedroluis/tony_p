@@ -102,3 +102,16 @@ color:black;
     justify-content: space-around;  
     width: 50px;  
   }
+
+  .text-line{
+    -webkit-text-stroke: 2px #212529;
+    
+}
+
+.bigtext{
+    font-family:  'Archivo Black', sans-serif;
+    font-size: 70px;
+    font-weight: 800;
+    letter-spacing: 0;
+    
+}

@@ -8,6 +8,7 @@ import { Posts } from "./pages/Posts.jsx";
 import { CreatePost } from "./pages/CreatePost.jsx";
 import { Admin } from "./pages/Admin.jsx";
 import { Roles } from "./pages/Roles.jsx";
+import { NotFound } from "./pages/NotFound.jsx";
 // Componentes
 import { Navbar } from "./component/Navbar";
 import { Footer } from "./component/Footer.jsx";
@@ -45,6 +46,7 @@ const Layout = () => {
               <Route element={<Roles to="/" replace />} path="/roles" />
             </>
           )}
+          <Route element={<NotFound/>} path="*"/>
         </Routes>
         <Footer />
       </BrowserRouter>
